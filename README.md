@@ -1,5 +1,7 @@
 # Nut-engine
 
+[![Build status](https://ci.appveyor.com/api/projects/status/2k8pp7y52ghm90uc/branch/master)](https://ci.appveyor.com/project/NutshellySima/nut-engine/branch/master)
+
 ### English
 Nut-engine is a gomoku/renju AI.
 
