@@ -5,7 +5,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,64 +19,19 @@
 #include"chessboard.h"
 using namespace std;
 
-bool searcher::remotecell(std::array<std::array<int8_t, 15>, 15> board, int8_t row, int8_t col) const noexcept
-{
-	for (int i = row - 2; i <= row + 2; ++i)
-	{
-		if (i < 0 || i >= 15)
-			continue;
-		for (int j = col - 2; j <= col + 2; ++j)
-		{
-			if (j < 0 || j >= 15)
-				continue;
-			if (board[i][j] > 0)
-				return false;
-		}
-	}
-	return true;
-}
 
-std::vector<std::tuple<int, int8_t, int8_t>> searcher::genmove(std::array<std::array<int8_t, 15>, 15>board)const noexcept
+std::vector<std::tuple<int, int8_t, int8_t>> searcher::genmove(chessboard& board)const noexcept
 {
-	int min_r = INT_MAX, min_c = INT_MAX, max_r = INT_MIN, max_c = INT_MIN;
-	for (int r = 0; r < 15; ++r)
-	{
-		for (int c = 0; c < 15; ++c)
-		{
-			if (board[r][c] != 0)
-			{
-				if (r < min_r)
-					min_r = r;
-				if (c < min_c)
-					min_c = c;
-				if (r > max_r)
-					max_r = r;
-				if (c > max_c)
-					max_c = c;
-			}
-		}
-	}
-	if (min_r - 2 < 0)
-		min_r = 2;
-	if (min_c - 2 < 0)
-		min_c = 2;
-	if (max_r + 2 >= 15)
-		max_r = 12;
-	if (max_c + 2 >= 15)
-		max_c = 12;
 	std::vector<std::tuple<int, int8_t, int8_t>>moves;
-	for (int i = min_r - 2; i <= max_r + 2; ++i)
+	int score;
+	for (int i = 0; i < 15; ++i)
 	{
-		for (int ii = min_c - 2; ii <= max_c + 2; ++ii)
+		for (int ii = 0; ii < 15; ++ii)
 		{
-			if (board[i][ii] == 0)
+			if (board.board[i][ii] == 0 && board.remote_cell[i][ii] != 0)
 			{
-				int score;
-				if (!remotecell(std::ref(board), i, ii))
-				{
-					score = evaluator.pos[i][ii];
-					moves.push_back(std::make_tuple(score, i, ii));
-				}
+				score = evaluator.pos[i][ii];
+				moves.push_back(std::make_tuple(score, i, ii));
 			}
 		}
 	}
@@ -90,7 +45,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 {
 	int alpha = -0x7fffffff, beta = 0x7fffffff;
 	std::vector<std::tuple<int, int8_t, int8_t>> ress;
-	auto moves = genmove(ref(board.board));
+	auto moves = genmove(ref(board));
 	std::tuple<int, int, int> v = std::make_tuple(-0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
@@ -141,7 +96,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 	if (depth >= 4)
 		moves = smart_genmove(turn, ref(board), 2);
 	else
-		moves = genmove(ref(board.board));
+		moves = genmove(ref(board));
 	std::tuple<int, int, int> v = std::make_tuple(-0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
@@ -194,7 +149,7 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, 
 		return std::make_tuple(10000000 - ply, i, ii);
 	else if (depth <= 0)
 		return std::make_tuple(res, i, ii);
-	auto moves = genmove(ref(board.board));
+	auto moves = genmove(ref(board));
 	std::tuple<int, int, int> v = std::make_tuple(0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{

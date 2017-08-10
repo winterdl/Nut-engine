@@ -26,23 +26,29 @@ chessboard::chessboard()noexcept
 
 void chessboard::reset()noexcept
 {
+	number = 0;
 	for (int i = 0; i < 15; ++i)
 	{
 		for (int ii = 0; ii < 15; ++ii)
+		{
+			remote_cell[i][ii] = 0;
 			board[i][ii] = 0;
+		}
 	}
 }
 
-int chessboard::get(int row, int col) const noexcept
+int chessboard::get(const int row, const int col) const noexcept
 {
 	return board[row][col];
 }
 
-bool chessboard::put(int row, int col, int x) noexcept
+bool chessboard::put(const int row, const int col, const int x) noexcept
 {
 	if (row >= 0 && row < 15 && col >= 0 && col < 15 && board[row][col] == 0)
 	{
 		board[row][col] = x;
+		update_remotecell(row, col, true);
+		++number;
 		return true;
 	}
 	else
@@ -51,12 +57,13 @@ bool chessboard::put(int row, int col, int x) noexcept
 	}
 }
 
-
-int chessboard::undo(int row,int col)noexcept
+int chessboard::undo(const int row, const int col)noexcept
 {
 	if (row < 0 || row >= 15 || col < 0 || col >= 15|| board[row][col] == 0)
 		return 2;
 	board[row][col] = 0;
+	--number;
+	update_remotecell(row, col, false);
 	return 0;
 }
 
@@ -151,36 +158,6 @@ int chessboard::check()const noexcept
 		}
 		counto = countx = 0;
 	}
-	for (int i = 0; i <= 10; ++i)
-	{
-		int y = i;
-		for (int x = 0; y < 15; ++x, ++y)
-		{
-			if (board[x][y] == 0)
-			{
-				countx = counto = 0;
-			}
-			if (board[x][y] == 1)
-			{
-				++counto;
-				countx = 0;
-			}
-			if (board[x][y] == 2)
-			{
-				++countx;
-				counto = 0;
-			}
-			if (counto == 5)
-			{
-				return 1;
-			}
-			if (countx == 5)
-			{
-				return 2;
-			}
-		}
-		counto = countx = 0;
-	}
 	for (int i = 4; i <= 24; ++i)
 	{
 		int x = 0;
@@ -220,15 +197,25 @@ int chessboard::check()const noexcept
 	return 0;
 }
 
-bool chessboard::Fullboard()const noexcept
+void chessboard::update_remotecell(const int row, const  int col, const bool add) noexcept
 {
-	for (int i = 0; i < 15; ++i)
+	for (int i = row - 2; i <= row + 2; ++i)
 	{
-		for (int ii = 0; ii < 15; ++ii)
+		if (i < 0 || i >= 15)
+			continue;
+		for (int j = col - 2; j <= col + 2; ++j)
 		{
-			if (board[i][ii] == 0)
-				return false;
+			if (j < 0 || j >= 15)
+				continue;
+			if (add == true)
+				++remote_cell[i][j];
+			else
+				--remote_cell[i][j];
 		}
 	}
-	return true;
+}
+
+bool chessboard::Fullboard()const noexcept
+{
+	return number == 15 * 15;
 }

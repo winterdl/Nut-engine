@@ -22,11 +22,14 @@ class DllExport chessboard {
 public:
 	chessboard()noexcept;
 	void reset()noexcept;
-	int get(int row, int col)const noexcept;
-	bool put(int row, int col, int x)noexcept;
+	int get(const int row, const int col)const noexcept;
+	bool put(const int row, const int col, const int x)noexcept;
 	bool Fullboard()const noexcept;
-	int undo(int row,int col)noexcept;
+	int undo(const int row, const int col)noexcept;
 	int check()const noexcept;
+	void update_remotecell(const int row, const int col, const bool add)noexcept;
 	std::array<std::array<int8_t, 15>, 15>board;
+	std::array<std::array<uint8_t, 15>, 15>remote_cell;
+	unsigned int number;
 };
 
