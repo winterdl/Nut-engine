@@ -5,7 +5,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -59,7 +59,7 @@ bool chessboard::put(const int row, const int col, const int x) noexcept
 
 int chessboard::undo(const int row, const int col)noexcept
 {
-	if (row < 0 || row >= 15 || col < 0 || col >= 15|| board[row][col] == 0)
+	if (row < 0 || row >= 15 || col < 0 || col >= 15 || board[row][col] == 0)
 		return 2;
 	board[row][col] = 0;
 	--number;
@@ -128,10 +128,12 @@ int chessboard::check()const noexcept
 		}
 		counto = countx = 0;
 	}
-	for (int i = 0; i <= 10; ++i)
+	for (int i = -10; i <= 10; ++i)
 	{
-		int x = i;
-		for (int y = 0; x < 15; ++x, ++y)
+		int x = i, y = 0;
+		while (x < 0)
+			++x, ++y;
+		for (; x < 15; ++x, ++y)
 		{
 			if (board[x][y] == 0)
 			{
@@ -162,13 +164,13 @@ int chessboard::check()const noexcept
 	{
 		int x = 0;
 		int y = i;
+		while (y >= 15)
+		{
+			++x;
+			--y;
+		}
 		for (; x < 15 && y >= 0; ++x, --y)
 		{
-			while (y >= 15)
-			{
-				++x;
-				--y;
-			}
 			if (board[x][y] == 0)
 			{
 				countx = counto = 0;
@@ -193,6 +195,128 @@ int chessboard::check()const noexcept
 			}
 		}
 		counto = countx = 0;
+	}
+	return 0;
+}
+
+int chessboard::checkpoint(const int row, const int col) const noexcept
+{
+	if (row < 0 || row >= 15 || col < 0 || col >= 15)
+		return 0;
+	int counto = 0, countx = 0;
+	for (int ii = 0; ii < 15; ++ii)
+	{
+		if (board[row][ii] == 0)
+		{
+			countx = counto = 0;
+		}
+		if (board[row][ii] == 1)
+		{
+			++counto;
+			countx = 0;
+		}
+		if (board[row][ii] == 2)
+		{
+			++countx;
+			counto = 0;
+		}
+		if (counto == 5)
+		{
+			return 1;
+		}
+		if (countx == 5)
+		{
+			return 2;
+		}
+	}
+	counto = countx = 0;
+	for (int ii = 0; ii < 15; ++ii)
+	{
+		if (board[ii][col] == 0)
+		{
+			countx = counto = 0;
+		}
+		if (board[ii][col] == 1)
+		{
+			++counto;
+			countx = 0;
+		}
+		if (board[ii][col] == 2)
+		{
+			++countx;
+			counto = 0;
+		}
+		if (counto == 5)
+		{
+			return 1;
+		}
+		if (countx == 5)
+		{
+			return 2;
+		}
+	}
+	counto = countx = 0;
+	int x = row - col, y = 0;
+	while (x < 0)
+		++x, ++y;
+	for (; x < 15; ++x, ++y)
+	{
+		if (board[x][y] == 0)
+		{
+			countx = counto = 0;
+		}
+		if (board[x][y] == 1)
+		{
+			++counto;
+			countx = 0;
+		}
+		if (board[x][y] == 2)
+		{
+			++countx;
+			counto = 0;
+		}
+		if (counto == 5)
+		{
+			return 1;
+		}
+		if (countx == 5)
+		{
+			return 2;
+		}
+	}
+	counto = countx = 0;
+	int i = row + col;
+	x = 0;
+	y = i;
+	while (y >= 15)
+	{
+		++x;
+		--y;
+	}
+	for (; x < 15 && y >= 0; ++x, --y)
+	{
+		if (board[x][y] == 0)
+		{
+			countx = counto = 0;
+		}
+		if (board[x][y] == 1)
+		{
+			++counto;
+			countx = 0;
+		}
+		if (board[x][y] == 2)
+		{
+			++countx;
+			counto = 0;
+		}
+		if (counto == 5)
+		{
+			return 1;
+		}
+		if (countx == 5)
+		{
+			return 2;
+		}
 	}
 	return 0;
 }

@@ -5,7 +5,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,10 +40,12 @@ void evaluation::reset()noexcept
 
 int evaluation::analyse_line(int line[30], int record[30], int num, int pos)noexcept
 {
-	for (int i = num; i < 30; ++i)
+	std::fill(line + num, line + 29, 0xf);
+	std::fill(record, record + num - 1, TODO);
+	/*for (int i = num; i < 30; ++i)
 		line[i] = 0xf;
 	for (int i = 0; i < num; ++i)
-		record[i] = TODO;
+		record[i] = TODO;*/
 	if (num < 5)
 	{
 		for (int i = 0; i < num; ++i)

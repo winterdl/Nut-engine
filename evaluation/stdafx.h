@@ -23,5 +23,5 @@
 #include <windows.h>
 
 
-
+#include<algorithm>
 #include<array>
