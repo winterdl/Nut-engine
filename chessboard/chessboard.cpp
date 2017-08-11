@@ -133,7 +133,7 @@ int chessboard::check()const noexcept
 		int x = i, y = 0;
 		while (x < 0)
 			++x, ++y;
-		for (; x < 15; ++x, ++y)
+		for (; x < 15 && y < 15; ++x, ++y)
 		{
 			if (board[x][y] == 0)
 			{
@@ -259,7 +259,7 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 	int x = row - col, y = 0;
 	while (x < 0)
 		++x, ++y;
-	for (; x < 15; ++x, ++y)
+	for (; x < 15 && y < 15; ++x, ++y)
 	{
 		if (board[x][y] == 0)
 		{
@@ -342,15 +342,16 @@ void chessboard::update_remotecell(const int row, const  int col, const bool add
 std::vector<std::tuple<int, int8_t, int8_t>> chessboard::genmove() const noexcept
 {
 	std::vector<std::tuple<int, int8_t, int8_t>>moves;
+	moves.reserve(64);
 	int score;
 	for (int i = 0; i < 15; ++i)
 	{
 		for (int ii = 0; ii < 15; ++ii)
 		{
-			if (board[i][ii] == 0 && remote_cell[i][ii] != 0)
+			if (remote_cell[i][ii] != 0 && board[i][ii] == 0)
 			{
 				score = evaluator.pos[i][ii];
-				moves.push_back(std::make_tuple(score, i, ii));
+				moves.emplace_back(std::make_tuple(score, i, ii));
 			}
 		}
 	}

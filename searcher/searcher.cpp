@@ -28,7 +28,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 	std::tuple<int, int, int> v = std::make_tuple(-0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
-		board.board[std::get<1>(x)][std::get<2>(x)] = turn;
+		board.put(ref(std::get<1>(x)), ref(std::get<2>(x)), ref(turn));
 		int nturn;
 		if (turn == 1)
 			nturn = 2;
@@ -39,7 +39,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 		if (std::get<0>(v) < std::get<0>(com))
 			v = com;
 		ress.push_back(com);
-		board.board[std::get<1>(x)][std::get<2>(x)] = 0;
+		board.undo(ref(std::get<1>(x)), ref(std::get<2>(x)));
 		alpha = max(alpha, std::get<0>(v));
 	}
 	sort(ress.rbegin(), ress.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
@@ -79,7 +79,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 	std::tuple<int, int, int> v = std::make_tuple(-0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
-		board.board[std::get<1>(x)][std::get<2>(x)] = turn;
+		board.put(ref(std::get<1>(x)), ref(std::get<2>(x)), ref(turn));
 		std::tuple<int, int8_t, int8_t> temp;
 		if (depth == 4)
 		{
@@ -105,7 +105,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 		auto com = make_tuple(std::get<0>(temp), std::get<1>(x), std::get<2>(x));
 		if (std::get<0>(v) < std::get<0>(com))
 			v = com;
-		board.board[std::get<1>(x)][std::get<2>(x)] = 0;
+		board.undo(ref(std::get<1>(x)), ref(std::get<2>(x)));
 		if (std::get<0>(v) >= beta)
 			return v;
 		alpha = max(alpha, std::get<0>(v));
@@ -132,12 +132,12 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, 
 	std::tuple<int, int, int> v = std::make_tuple(0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
-		board.board[std::get<1>(x)][std::get<2>(x)] = turn;
+		board.put(ref(std::get<1>(x)), ref(std::get<2>(x)), ref(turn));
 		auto temp = max_value(nturn, ref(board), alpha, beta, depth - 1, std::get<1>(x), std::get<2>(x), ply + 1);
 		auto com = make_tuple(std::get<0>(temp), std::get<1>(x), std::get<2>(x));
 		if (get<0>(v) > get<0>(com))
 			v = com;
-		board.board[std::get<1>(x)][std::get<2>(x)] = 0;
+		board.undo(ref(std::get<1>(x)), ref(std::get<2>(x)));
 		if (std::get<0>(v) <= alpha)
 			return v;
 		beta = min(beta, std::get<0>(v));

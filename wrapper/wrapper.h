@@ -41,17 +41,13 @@ public:
 	{
 		return board;
 	}
-	auto Getchessboard()
-	{
-		return board.board;
-	}
 	bool Undoboard(int row, int col)
 	{
 		return board.undo(row, col);
 	}
-	int Checkwin()
+	int Checkwin(const int row,const int col)
 	{
-		return board.check();
+		return board.checkpoint(row,col);
 	}
 	auto Putcomputer(int turn, int timeout)
 	{
