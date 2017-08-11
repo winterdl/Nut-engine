@@ -458,23 +458,23 @@ int evaluation::__evaluate(std::array<std::array<int8_t, 15>, 15>&board, int tur
 		if (count[WHITE][STWO])
 			wvalue += count[WHITE][STWO];
 	}
-	int wc = 0, bc = 0;
-	for (int i = 0; i < 15; ++i)
-	{
-		for (int j = 0; j < 15; ++j)
-		{
-			int stone = board[i][j];
-			if (stone)
-			{
-				if (stone == WHITE)
-					wc += pos[i][j];
-				else
-					bc += pos[i][j];
-			}
-		}
-	}
-	wvalue += wc;
-	bvalue += bc;
+	//int wc = 0, bc = 0;
+	//for (int i = 0; i < 15; ++i)
+	//{
+	//	for (int j = 0; j < 15; ++j)
+	//	{
+	//		int stone = board[i][j];
+	//		if (stone)
+	//		{
+	//			if (stone == WHITE)
+	//				wc += pos[i][j];
+	//			else
+	//				bc += pos[i][j];
+	//		}
+	//	}
+	//}
+	//wvalue += wc;
+	//bvalue += bc;
 	if (turn == WHITE)
 		return wvalue - bvalue;
 	return bvalue - wvalue;
