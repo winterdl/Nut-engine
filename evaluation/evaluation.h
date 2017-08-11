@@ -21,13 +21,11 @@
 
 class DllExport evaluation
 {
-	friend class searcher;
-	friend class chessboard;
 public:
 	evaluation()noexcept;
 	int evaluate(std::array<std::array<int8_t, 15>, 15>&, int turn)noexcept;
-private:
 	int pos[15][15];
+private:
 	void reset()noexcept;
 	int analyse_line(int line[30], int record[30], int num, int pos)noexcept;
 	int analysis_horizon(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
