@@ -215,6 +215,27 @@ void chessboard::update_remotecell(const int row, const  int col, const bool add
 	}
 }
 
+std::vector<std::tuple<int, int8_t, int8_t>> chessboard::genmove() const noexcept
+{
+	std::vector<std::tuple<int, int8_t, int8_t>>moves;
+	int score;
+	for (int i = 0; i < 15; ++i)
+	{
+		for (int ii = 0; ii < 15; ++ii)
+		{
+			if (board[i][ii] == 0 && remote_cell[i][ii] != 0)
+			{
+				score = evaluator.pos[i][ii];
+				moves.push_back(std::make_tuple(score, i, ii));
+			}
+		}
+	}
+	if (moves.empty())
+		moves.push_back(std::make_tuple(3, 7, 7));
+	std::sort(moves.rbegin(), moves.rend());
+	return moves;
+}
+
 bool chessboard::Fullboard()const noexcept
 {
 	return number == 15 * 15;

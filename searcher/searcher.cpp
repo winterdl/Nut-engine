@@ -20,32 +20,11 @@
 using namespace std;
 
 
-std::vector<std::tuple<int, int8_t, int8_t>> searcher::genmove(chessboard& board)const noexcept
-{
-	std::vector<std::tuple<int, int8_t, int8_t>>moves;
-	int score;
-	for (int i = 0; i < 15; ++i)
-	{
-		for (int ii = 0; ii < 15; ++ii)
-		{
-			if (board.board[i][ii] == 0 && board.remote_cell[i][ii] != 0)
-			{
-				score = evaluator.pos[i][ii];
-				moves.push_back(std::make_tuple(score, i, ii));
-			}
-		}
-	}
-	if (moves.empty())
-		moves.push_back(std::make_tuple(3, 7, 7));
-	std::sort(moves.rbegin(), moves.rend());
-	return moves;
-}
-
 std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, chessboard board, int depth) noexcept
 {
 	int alpha = -0x7fffffff, beta = 0x7fffffff;
 	std::vector<std::tuple<int, int8_t, int8_t>> ress;
-	auto moves = genmove(ref(board));
+	auto moves = board.genmove();
 	std::tuple<int, int, int> v = std::make_tuple(-0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
@@ -96,7 +75,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 	if (depth >= 4)
 		moves = smart_genmove(turn, ref(board), 2);
 	else
-		moves = genmove(ref(board));
+		moves = board.genmove();
 	std::tuple<int, int, int> v = std::make_tuple(-0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
@@ -149,7 +128,7 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, 
 		return std::make_tuple(10000000 - ply, i, ii);
 	else if (depth <= 0)
 		return std::make_tuple(res, i, ii);
-	auto moves = genmove(ref(board));
+	auto moves = board.genmove();
 	std::tuple<int, int, int> v = std::make_tuple(0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{

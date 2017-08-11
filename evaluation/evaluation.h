@@ -22,6 +22,7 @@
 class DllExport evaluation
 {
 	friend class searcher;
+	friend class chessboard;
 public:
 	evaluation()noexcept;
 	int evaluate(std::array<std::array<int8_t, 15>, 15>&, int turn)noexcept;
