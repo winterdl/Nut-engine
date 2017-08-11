@@ -206,7 +206,7 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 	int counto = 0, countx = 0;
 	for (int ii = 0; ii < 15; ++ii)
 	{
-		if (board[row][ii] == 0)
+		if ((countx != 0 || counto != 0) && board[row][ii] == 0)
 		{
 			countx = counto = 0;
 		}
@@ -215,7 +215,7 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 			++counto;
 			countx = 0;
 		}
-		if (board[row][ii] == 2)
+		else if (board[row][ii] == 2)
 		{
 			++countx;
 			counto = 0;
@@ -232,7 +232,7 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 	counto = countx = 0;
 	for (int ii = 0; ii < 15; ++ii)
 	{
-		if (board[ii][col] == 0)
+		if ((countx != 0 || counto != 0) && board[ii][col] == 0)
 		{
 			countx = counto = 0;
 		}
@@ -241,7 +241,7 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 			++counto;
 			countx = 0;
 		}
-		if (board[ii][col] == 2)
+		else if (board[ii][col] == 2)
 		{
 			++countx;
 			counto = 0;
@@ -261,7 +261,7 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 		++x, ++y;
 	for (; x < 15 && y < 15; ++x, ++y)
 	{
-		if (board[x][y] == 0)
+		if ((countx != 0 || counto != 0) && board[x][y] == 0)
 		{
 			countx = counto = 0;
 		}
@@ -270,7 +270,7 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 			++counto;
 			countx = 0;
 		}
-		if (board[x][y] == 2)
+		else if (board[x][y] == 2)
 		{
 			++countx;
 			counto = 0;
@@ -295,7 +295,7 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 	}
 	for (; x < 15 && y >= 0; ++x, --y)
 	{
-		if (board[x][y] == 0)
+		if ((countx != 0 || counto != 0) && board[x][y] == 0)
 		{
 			countx = counto = 0;
 		}
@@ -304,7 +304,7 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 			++counto;
 			countx = 0;
 		}
-		if (board[x][y] == 2)
+		else if (board[x][y] == 2)
 		{
 			++countx;
 			counto = 0;

@@ -40,8 +40,9 @@ void evaluation::reset()noexcept
 
 int evaluation::analyse_line(int line[30], int record[30], int num, int pos)noexcept
 {
-	std::fill(line + num, line + 29, 0xf);
-	std::fill(record, record + num - 1, TODO);
+	std::fill(line + num, line + 30, 0xf);
+	memset(record, 0, sizeof(int)*num);
+	//std::fill(record, record + num, TODO);
 	/*for (int i = num; i < 30; ++i)
 		line[i] = 0xf;
 	for (int i = 0; i < num; ++i)
