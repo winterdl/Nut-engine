@@ -20,8 +20,10 @@
 using namespace std;
 
 
-std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, chessboard board, int depth) noexcept
+std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, chessboard board, int depth, int current) noexcept
 {
+	if (current <= 3)
+		return board.genmove();
 	int alpha = -0x7fffffff, beta = 0x7fffffff;
 	std::vector<std::tuple<int, int8_t, int8_t>> ress;
 	auto moves = board.genmove();
@@ -34,7 +36,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 			nturn = 2;
 		else
 			nturn = 1;
-		auto temp = min_value(nturn, ref(board), alpha, beta, depth - 2, std::get<1>(x), std::get<2>(x), 0);
+		auto temp = min_value(nturn, ref(board), alpha, beta, depth - 1, std::get<1>(x), std::get<2>(x), 0);
 		auto com = make_tuple(std::get<0>(temp), std::get<1>(x), std::get<2>(x));
 		if (std::get<0>(v) < std::get<0>(com))
 			v = com;
@@ -58,7 +60,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 {
 	bool changed = false;
 	std::chrono::time_point<std::chrono::steady_clock> timeout;
-	if (depth == 4)
+	if (depth == 5)
 		timeout = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeoutnum);
 	int nturn;
 	if (turn == 1)
@@ -74,16 +76,13 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 	else if (depth <= 0)
 		return std::make_tuple(res, i, ii);
 	std::vector<std::tuple<int, int8_t, int8_t>> moves;
-	if (depth >= 4)
-		moves = smart_genmove(turn, ref(board), 2);
-	else
-		moves = board.genmove();
+	moves = smart_genmove(turn, ref(board), 2, depth);
 	std::tuple<int, int, int> v = std::make_tuple(-0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
 		board.put(ref(std::get<1>(x)), ref(std::get<2>(x)), ref(turn));
 		std::tuple<int, int8_t, int8_t> temp;
-		if (depth == 4)
+		if (depth == 5)
 		{
 			if (changed == false)
 			{
@@ -131,7 +130,7 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, 
 		return std::make_tuple(10000000 - ply, i, ii);
 	else if (depth <= 0)
 		return std::make_tuple(res, i, ii);
-	auto moves = board.genmove();
+	auto moves = smart_genmove(turn, ref(board), 2, depth);
 	std::tuple<int, int, int> v = std::make_tuple(0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
