@@ -42,6 +42,16 @@ void chessboard::reset()noexcept
 			board[i][ii] = 0;
 		}
 	}
+	for (int x = 0; x < 4; ++x)
+	{
+		for (int i = 0; i < 15; ++i)
+		{
+			for (int ii = 0; ii < 15; ++ii)
+			{
+				layer_2[x][i][ii] = 0;
+			}
+		}
+	}
 }
 
 int chessboard::get(const int row, const int col) const noexcept

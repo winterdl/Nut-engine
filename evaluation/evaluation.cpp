@@ -31,7 +31,7 @@ void evaluation::reset()noexcept
 	memset(record, 0, sizeof(record));
 }
 
-int evaluation::analyse_line(std::array<int, 30>& line, std::array<int, 30>& record, int num, int pos)noexcept
+int evaluation::analyse_line(std::array<uint8_t, 15>& line, std::array<int, 15>& record, int num, int pos)noexcept
 {
 	std::fill_n(record.begin(), num, TODO);
 	if (num < 5)
@@ -39,7 +39,7 @@ int evaluation::analyse_line(std::array<int, 30>& line, std::array<int, 30>& rec
 		std::fill_n(record.begin(), num, ANALYSED);
 		return 0;
 	}
-	std::fill_n(line.rbegin(), 30 - num, 0xf);
+	//std::fill_n(line.rbegin(), 15 - num, 0xf);
 	int8_t stone = line[pos];
 	int8_t inverse = nturn[stone];
 
@@ -228,9 +228,7 @@ int evaluation::analyse_line(std::array<int, 30>& line, std::array<int, 30>& rec
 
 void evaluation::analysis_horizon(chessboard&board, int i, int j)noexcept
 {
-	for (int x = 0; x < 15; ++x)
-		line[x] = board.board[i][x];
-	analyse_line(line, result, 15, j);
+	analyse_line(std::ref(board.layer_2[0][i]), result, 15, j);
 	for (int x = 0; x < 15; ++x)
 	{
 		if (result[x] != TODO)
@@ -240,9 +238,7 @@ void evaluation::analysis_horizon(chessboard&board, int i, int j)noexcept
 
 void evaluation::analysis_vertical(chessboard&board, int i, int j)noexcept
 {
-	for (int x = 0; x < 15; ++x)
-		line[x] = board.board[x][j];
-	analyse_line(line, result, 15, i);
+	analyse_line(std::ref(board.layer_2[1][j]), result, 15, i);
 	for (int x = 0; x < 15; ++x)
 	{
 		if (result[x] != TODO)
