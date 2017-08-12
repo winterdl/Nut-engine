@@ -19,10 +19,10 @@
 
 evaluation::evaluation()noexcept
 {
-	memset(result, 0, sizeof(result));
+	std::fill(result.begin(), result.end(), 0);
+	std::fill(line.begin(), line.end(), 0);
 	memset(count, 0, sizeof(count));
 	memset(record, 0, sizeof(record));
-	memset(line, 0, sizeof(line));
 }
 
 void evaluation::reset()noexcept
@@ -31,24 +31,18 @@ void evaluation::reset()noexcept
 	memset(record, 0, sizeof(record));
 }
 
-int evaluation::analyse_line(int line[30], int record[30], int num, int pos)noexcept
+int evaluation::analyse_line(std::array<int, 30>& line, std::array<int, 30>& record, int num, int pos)noexcept
 {
-	std::fill(line + num, line + 30, 0xf);
-	memset(record, 0, sizeof(int)*num);
-	//std::fill(record, record + num, TODO);
-	/*for (int i = num; i < 30; ++i)
-		line[i] = 0xf;
-	for (int i = 0; i < num; ++i)
-		record[i] = TODO;*/
+	std::fill_n(record.begin(), num, TODO);
 	if (num < 5)
 	{
-		for (int i = 0; i < num; ++i)
-			record[i] = ANALYSED;
+		std::fill_n(record.begin(), num, ANALYSED);
 		return 0;
 	}
-	int stone = line[pos];
-	const int temp[] = { 0,2,1 };
-	int inverse = temp[stone];
+	std::fill_n(line.rbegin(), 30 - num, 0xf);
+	int8_t stone = line[pos];
+	int8_t inverse = nturn[stone];
+
 	--num;
 	int xl = pos, xr = pos;
 	while (xl > 0)
@@ -344,31 +338,20 @@ int evaluation::__evaluate(std::array<std::array<int8_t, 15>, 15>&board, int tur
 				for (int k = 0; k < 4; ++k)
 				{
 					int ch = record[i][j][k];
-					if (ch == FIVE || ch == FOUR || ch == SFOUR || ch == THREE || ch == STHREE || ch == TWO || ch == STWO)
+					if (ch >= STWO&&ch <= FIVE)
 						++count[stone][ch];
 				}
 			}
 		}
 	}
-	int BLACK = 1, WHITE = 2;
-	if (turn == WHITE)
-	{
-		if (count[BLACK][FIVE])
-			return -9999;
-		if (count[WHITE][FIVE])
-			return 9999;
-	}
-	else
-	{
-		if (count[WHITE][FIVE])
-			return -9999;
-		if (count[BLACK][FIVE])
-			return 9999;
-	}
+	if (count[BLACK][FIVE])
+		return 9999 * checkturn(BLACK, turn);
+	if (count[WHITE][FIVE])
+		return 9999 * checkturn(WHITE, turn);
 	if (count[WHITE][SFOUR] >= 2)
-		count[WHITE][FOUR] += 1;
+		++count[WHITE][FOUR];
 	if (count[BLACK][SFOUR] >= 2)
-		count[BLACK][FOUR] += 1;
+		++count[BLACK][FOUR];
 	int wvalue = 0, bvalue = 0;
 	if (turn == WHITE)
 	{

@@ -26,16 +26,24 @@ public:
 	int evaluate(std::array<std::array<int8_t, 15>, 15>&, int turn)noexcept;
 private:
 	void reset()noexcept;
-	int analyse_line(int line[30], int record[30], int num, int pos)noexcept;
+	int analyse_line(std::array<int, 30>& line, std::array<int, 30>& record, int num, int pos)noexcept;
 	void analysis_horizon(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
 	void analysis_vertical(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
 	void analysis_left(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
 	void analysis_right(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
+	inline int checkturn(const int &side, const int &turn)const noexcept
+	{
+		if (side == turn)
+			return 1;
+		return -1;
+	}
 	int __evaluate(std::array<std::array<int8_t, 15>, 15>&, int turn)noexcept;
 	const int STWO = 1, STHREE = 2, SFOUR = 3, TWO = 4, THREE = 5, FOUR = 6, FIVE = 7, DFOUR = 8,
 		FOURT = 9, DTHREE = 10, NOTYPE = 11, ANALYSED = 255, TODO = 0;
-	int result[30];
-	int line[30];
+	const int BLACK = 1, WHITE = 2;
+	std::array<int, 30>result;
+	std::array<int, 30>line;
 	int record[15][15][4];//[row][col][direction]
 	int count[3][20];
+	const int nturn[3] = { 0,2,1 };
 };
