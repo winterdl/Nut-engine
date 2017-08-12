@@ -25,10 +25,19 @@ public:
 	evaluation()noexcept {};
 	int evaluate(chessboard&, const int turn)noexcept;
 private:
-	inline void reset()noexcept
+	inline void reset(chessboard& board)noexcept
 	{
 		memset(count, 0, sizeof(count));
-		memset(record, 0, sizeof(record));
+		for (int i = 0; i < 15; ++i)
+		{
+			for (int ii = 0; ii < 15; ++ii)
+			{
+				board.layer_3[i][ii][0] = 0;
+				board.layer_3[i][ii][1] = 0;
+				board.layer_3[i][ii][2] = 0;
+				board.layer_3[i][ii][3] = 0;
+			}
+		}
 	}
 	void analyse_line(const std::array<uint8_t, 15>& line, int num, const int pos)noexcept;
 	void analysis_horizon(chessboard&, int i, int j)noexcept;
@@ -53,6 +62,5 @@ private:
 	const int BLACK = 1, WHITE = 2;
 	const std::array<int, 3>nturn = { 0,2,1 };
 	std::array<int, 15>result;
-	int record[15][15][4];//[row][col][direction]
 	int count[3][20];
 };

@@ -216,7 +216,7 @@ void evaluation::analysis_horizon(chessboard&board, int i, int j)noexcept
 	for (int x = 0; x < 15; ++x)
 	{
 		if (result[x] != TODO)
-			record[i][x][0] = result[x];
+			board.layer_3[i][x][0] = result[x];
 	}
 }
 
@@ -226,7 +226,7 @@ void evaluation::analysis_vertical(chessboard&board, int i, int j)noexcept
 	for (int x = 0; x < 15; ++x)
 	{
 		if (result[x] != TODO)
-			record[x][j][1] = result[x];
+			board.layer_3[x][j][1] = result[x];
 	}
 }
 
@@ -248,7 +248,7 @@ void evaluation::analysis_left(chessboard&board, int i, int j)noexcept
 	for (int s = 0; s < k; ++s)
 	{
 		if (result[s] != TODO)
-			record[y + s][x + s][2] = result[s];
+			board.layer_3[y + s][x + s][2] = result[s];
 	}
 }
 
@@ -270,26 +270,26 @@ void evaluation::analysis_right(chessboard&board, int i, int j)noexcept
 	for (int s = 0; s < k; ++s)
 	{
 		if (result[s] != TODO)
-			record[y - s][x + s][3] = result[s];
+			board.layer_3[y - s][x + s][3] = result[s];
 	}
 }
 
 int evaluation::__evaluate(chessboard&board, int turn)noexcept
 {
-	reset();
+	reset(board);
 	for (int i = 0; i < 15; ++i)
 	{
 		for (int j = 0; j < 15; ++j)
 		{
 			if (board.board[i][j] != 0)
 			{
-				if (record[i][j][0] == TODO)
+				if (board.layer_3[i][j][0] == TODO)
 					analysis_horizon(board, i, j);
-				if (record[i][j][1] == TODO)
+				if (board.layer_3[i][j][1] == TODO)
 					analysis_vertical(board, i, j);
-				if (record[i][j][2] == TODO)
+				if (board.layer_3[i][j][2] == TODO)
 					analysis_left(board, i, j);
-				if (record[i][j][3] == TODO)
+				if (board.layer_3[i][j][3] == TODO)
 					analysis_right(board, i, j);
 			}
 		}
@@ -303,18 +303,18 @@ int evaluation::__evaluate(chessboard&board, int turn)noexcept
 			{
 				for (int k = 0; k < 4; ++k)
 				{
-					int ch = record[i][j][k];
+					int ch = board.layer_3[i][j][k];
 					if (ch >= STWO&&ch <= FIVE)
 						++count[stone][ch];
 				}
 			}
 		}
 	}
-
 	if (count[WHITE][SFOUR] >= 2)
 		++count[WHITE][FOUR];
 	if (count[BLACK][SFOUR] >= 2)
 		++count[BLACK][FOUR];
+
 	if (count[BLACK][FIVE])
 		return 9999 * checkturn(BLACK, turn);
 	if (count[WHITE][FIVE])
