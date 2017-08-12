@@ -391,6 +391,17 @@ void chessboard::update_layer_2(const int row, const int col, const bool add) no
 		y = row - col;
 	}
 	layer_2[2][row - col + 14][col - x] = xx;
+	if (14 - row < col)
+	{
+		x = col - 14 + row;
+		y = 14;
+	}
+	else
+	{
+		x = 0;
+		y = row + col;
+	}
+	layer_2[3][row + col][col - x] = xx;
 }
 
 std::vector<std::tuple<int, int8_t, int8_t>> chessboard::genmove() const noexcept

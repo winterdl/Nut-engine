@@ -281,14 +281,8 @@ void evaluation::analysis_right(chessboard&board, int i, int j)noexcept
 		x = 0;
 		y = i + j;
 	}
-	while (k < 15)
-	{
-		if (x + k > 14 || y - k < 0)
-			break;
-		line[k] = board.board[y - k][x + k];
-		++k;
-	}
-	analyse_line(line, result, k, j - x);
+	k = 15 - abs(i + j - 14);
+	analyse_line(board.layer_2[3][i + j], result, k, j - x);
 	for (int s = 0; s < k; ++s)
 	{
 		if (result[s] != TODO)
