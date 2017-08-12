@@ -30,7 +30,7 @@ private:
 		memset(count, 0, sizeof(count));
 		memset(record, 0, sizeof(record));
 	}
-	void analyse_line(const std::array<uint8_t, 15>& line, std::array<int, 15>& record, int num, const int pos)noexcept;
+	void analyse_line(const std::array<uint8_t, 15>& line, int num, const int pos)noexcept;
 	void analysis_horizon(chessboard&, int i, int j)noexcept;
 	void analysis_vertical(chessboard&, int i, int j)noexcept;
 	void analysis_left(chessboard&, int i, int j)noexcept;

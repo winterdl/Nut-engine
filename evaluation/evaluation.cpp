@@ -17,12 +17,12 @@
 #include "stdafx.h"
 #include "evaluation.h"
 
-void evaluation::analyse_line(const std::array<uint8_t, 15>& line, std::array<int, 15>& record, int num, const int pos)noexcept
+void evaluation::analyse_line(const std::array<uint8_t, 15>& line, int num, const int pos)noexcept
 {
-	std::fill_n(record.begin(), num, TODO);
+	std::fill_n(result.begin(), num, TODO);
 	if (num < 5)
 	{
-		std::fill_n(record.begin(), num, ANALYSED);
+		std::fill_n(result.begin(), num, ANALYSED);
 		return;
 	}
 	int8_t stone = line[pos];
@@ -57,15 +57,15 @@ void evaluation::analyse_line(const std::array<uint8_t, 15>& line, std::array<in
 	if (right_range - left_range < 4)
 	{
 		for (int k = left_range; k <= right_range; ++k)
-			record[k] = ANALYSED;
+			result[k] = ANALYSED;
 		return;
 	}
 	for (int k = xl; k <= xr; ++k)
-		record[k] = ANALYSED;
+		result[k] = ANALYSED;
 	int srange = xr - xl;
 	if (srange >= 4)
 	{
-		record[pos] = FIVE;
+		result[pos] = FIVE;
 		return;
 	}
 	if (srange == 3)
@@ -81,12 +81,12 @@ void evaluation::analyse_line(const std::array<uint8_t, 15>& line, std::array<in
 			if (line[xr + 1] == 0)
 			{
 				if (leftfour)
-					record[pos] = FOUR;
+					result[pos] = FOUR;
 				else
-					record[pos] = SFOUR;
+					result[pos] = SFOUR;
 			}
 			else if (leftfour)
-				record[pos] = SFOUR;
+				result[pos] = SFOUR;
 			return;
 		}
 	}
@@ -99,8 +99,8 @@ void evaluation::analyse_line(const std::array<uint8_t, 15>& line, std::array<in
 			{
 				if (xl > 1 && line[xl - 2] == stone)
 				{
-					record[xl] = SFOUR;
-					record[xl - 2] = ANALYSED;
+					result[xl] = SFOUR;
+					result[xl - 2] = ANALYSED;
 				}
 				else
 					left3 = true;
@@ -114,25 +114,25 @@ void evaluation::analyse_line(const std::array<uint8_t, 15>& line, std::array<in
 			{
 				if (xr < num - 1 && line[xr + 2] == stone)
 				{
-					record[xr] = SFOUR;
-					record[xr + 2] = ANALYSED;
+					result[xr] = SFOUR;
+					result[xr + 2] = ANALYSED;
 				}
 				else if (left3)
-					record[xr] = THREE;
+					result[xr] = THREE;
 				else
-					record[xr] = STHREE;
+					result[xr] = STHREE;
 			}
-			else if (record[xl] == SFOUR)
+			else if (result[xl] == SFOUR)
 				return;
 			else if (left3)
-				record[pos] = STHREE;
+				result[pos] = STHREE;
 		}
 		else
 		{
-			if (record[xl] == SFOUR)
+			if (result[xl] == SFOUR)
 				return;
 			if (left3)
-				record[pos] = STHREE;
+				result[pos] = STHREE;
 		}
 		return;
 	}
@@ -147,14 +147,14 @@ void evaluation::analyse_line(const std::array<uint8_t, 15>& line, std::array<in
 				{
 					if (line[xl - 3] == stone)
 					{
-						record[xl - 3] = ANALYSED;
-						record[xl - 2] = ANALYSED;
-						record[xl] = SFOUR;
+						result[xl - 3] = ANALYSED;
+						result[xl - 2] = ANALYSED;
+						result[xl] = SFOUR;
 					}
 					else if (line[xl - 3] == 0)
 					{
-						record[xl - 2] = ANALYSED;
-						record[xl] = STHREE;
+						result[xl - 2] = ANALYSED;
+						result[xl] = STHREE;
 					}
 				}
 				else
@@ -169,40 +169,40 @@ void evaluation::analyse_line(const std::array<uint8_t, 15>& line, std::array<in
 				{
 					if (line[xr + 3] == stone)
 					{
-						record[xr + 3] = ANALYSED;
-						record[xr + 2] = ANALYSED;
-						record[xr] = SFOUR;
+						result[xr + 3] = ANALYSED;
+						result[xr + 2] = ANALYSED;
+						result[xr] = SFOUR;
 					}
 					else if (line[xr + 3] == 0)
 					{
-						record[xr + 2] = ANALYSED;
+						result[xr + 2] = ANALYSED;
 						if (left2)
-							record[xr] = THREE;
+							result[xr] = THREE;
 						else
-							record[xr] = STHREE;
+							result[xr] = STHREE;
 					}
 				}
 				else
 				{
-					if (record[xl] == SFOUR)
+					if (result[xl] == SFOUR)
 						return;
-					if (record[xl] == STHREE)
+					if (result[xl] == STHREE)
 					{
-						record[xl] = THREE;
+						result[xl] = THREE;
 						return;
 					}
 					if (left2)
-						record[pos] = TWO;
+						result[pos] = TWO;
 					else
-						record[pos] = STWO;
+						result[pos] = STWO;
 				}
 			}
 			else
 			{
-				if (record[xl] == SFOUR)
+				if (result[xl] == SFOUR)
 					return;
 				if (left2)
-					record[pos] = STWO;
+					result[pos] = STWO;
 			}
 		}
 		return;
@@ -212,7 +212,7 @@ void evaluation::analyse_line(const std::array<uint8_t, 15>& line, std::array<in
 
 void evaluation::analysis_horizon(chessboard&board, int i, int j)noexcept
 {
-	analyse_line(std::ref(board.layer_2[0][i]), result, 15, j);
+	analyse_line(std::ref(board.layer_2[0][i]), 15, j);
 	for (int x = 0; x < 15; ++x)
 	{
 		if (result[x] != TODO)
@@ -222,7 +222,7 @@ void evaluation::analysis_horizon(chessboard&board, int i, int j)noexcept
 
 void evaluation::analysis_vertical(chessboard&board, int i, int j)noexcept
 {
-	analyse_line(std::ref(board.layer_2[1][j]), result, 15, i);
+	analyse_line(std::ref(board.layer_2[1][j]), 15, i);
 	for (int x = 0; x < 15; ++x)
 	{
 		if (result[x] != TODO)
@@ -244,7 +244,7 @@ void evaluation::analysis_left(chessboard&board, int i, int j)noexcept
 		y = i - j;
 	}
 	k = 15 - abs(i - j);
-	analyse_line(board.layer_2[2][i - j + 14], result, k, j - x);
+	analyse_line(board.layer_2[2][i - j + 14], k, j - x);
 	for (int s = 0; s < k; ++s)
 	{
 		if (result[s] != TODO)
@@ -266,7 +266,7 @@ void evaluation::analysis_right(chessboard&board, int i, int j)noexcept
 		y = i + j;
 	}
 	k = 15 - abs(i + j - 14);
-	analyse_line(board.layer_2[3][i + j], result, k, j - x);
+	analyse_line(board.layer_2[3][i + j], k, j - x);
 	for (int s = 0; s < k; ++s)
 	{
 		if (result[s] != TODO)
@@ -310,11 +310,11 @@ int evaluation::__evaluate(chessboard&board, int turn)noexcept
 			}
 		}
 	}
+
 	if (count[WHITE][SFOUR] >= 2)
 		++count[WHITE][FOUR];
 	if (count[BLACK][SFOUR] >= 2)
 		++count[BLACK][FOUR];
-
 	if (count[BLACK][FIVE])
 		return 9999 * checkturn(BLACK, turn);
 	if (count[WHITE][FIVE])
