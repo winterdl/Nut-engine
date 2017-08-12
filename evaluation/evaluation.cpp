@@ -20,7 +20,6 @@
 evaluation::evaluation()noexcept
 {
 	std::fill(result.begin(), result.end(), 0);
-	std::fill(line.begin(), line.end(), 0);
 	memset(count, 0, sizeof(count));
 	memset(record, 0, sizeof(record));
 }

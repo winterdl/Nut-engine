@@ -37,7 +37,7 @@ int main()
 		cout << turn << ": " << static_cast<char>(get<1>(x) + 'A') << " " << static_cast<char>('A' + get<2>(x)) << ": " << get<0>(x) << endl;
 	}
 	auto end = clock.now();
-	cout << "Duration: " << chrono::duration_cast<chrono::seconds>(end - start).count() << " s." << endl;
+	cout << "Duration: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms." << endl;
 	return 0;
 }
 
