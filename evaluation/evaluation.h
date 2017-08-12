@@ -22,11 +22,15 @@
 class DllExport evaluation
 {
 public:
-	evaluation()noexcept;
-	int evaluate(chessboard&, int turn)noexcept;
+	evaluation()noexcept {};
+	int evaluate(chessboard&, const int turn)noexcept;
 private:
-	void reset()noexcept;
-	int analyse_line(std::array<uint8_t, 15>& line, std::array<int, 15>& record, int num, int pos)noexcept;
+	inline void reset()noexcept
+	{
+		memset(count, 0, sizeof(count));
+		memset(record, 0, sizeof(record));
+	}
+	void analyse_line(const std::array<uint8_t, 15>& line, std::array<int, 15>& record, int num, const int pos)noexcept;
 	void analysis_horizon(chessboard&, int i, int j)noexcept;
 	void analysis_vertical(chessboard&, int i, int j)noexcept;
 	void analysis_left(chessboard&, int i, int j)noexcept;
@@ -36,6 +40,12 @@ private:
 		if (side == turn)
 			return 1;
 		return -1;
+	}
+	inline int sign(int number)const noexcept
+	{
+		if (number < 0)
+			return -1;
+		return 1;
 	}
 	int __evaluate(chessboard&, int turn)noexcept;
 	const int STWO = 1, STHREE = 2, SFOUR = 3, TWO = 4, THREE = 5, FOUR = 6, FIVE = 7, DFOUR = 8,

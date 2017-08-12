@@ -17,31 +17,16 @@
 #include "stdafx.h"
 #include "evaluation.h"
 
-evaluation::evaluation()noexcept
-{
-	std::fill(result.begin(), result.end(), 0);
-	memset(count, 0, sizeof(count));
-	memset(record, 0, sizeof(record));
-}
-
-void evaluation::reset()noexcept
-{
-	memset(count, 0, sizeof(count));
-	memset(record, 0, sizeof(record));
-}
-
-int evaluation::analyse_line(std::array<uint8_t, 15>& line, std::array<int, 15>& record, int num, int pos)noexcept
+void evaluation::analyse_line(const std::array<uint8_t, 15>& line, std::array<int, 15>& record, int num, const int pos)noexcept
 {
 	std::fill_n(record.begin(), num, TODO);
 	if (num < 5)
 	{
 		std::fill_n(record.begin(), num, ANALYSED);
-		return 0;
+		return;
 	}
-	//std::fill_n(line.rbegin(), 15 - num, 0xf);
 	int8_t stone = line[pos];
 	int8_t inverse = nturn[stone];
-
 	--num;
 	int xl = pos, xr = pos;
 	while (xl > 0)
@@ -73,7 +58,7 @@ int evaluation::analyse_line(std::array<uint8_t, 15>& line, std::array<int, 15>&
 	{
 		for (int k = left_range; k <= right_range; ++k)
 			record[k] = ANALYSED;
-		return 0;
+		return;
 	}
 	for (int k = xl; k <= xr; ++k)
 		record[k] = ANALYSED;
@@ -81,7 +66,7 @@ int evaluation::analyse_line(std::array<uint8_t, 15>& line, std::array<int, 15>&
 	if (srange >= 4)
 	{
 		record[pos] = FIVE;
-		return FIVE;
+		return;
 	}
 	if (srange == 3)
 	{
@@ -102,7 +87,7 @@ int evaluation::analyse_line(std::array<uint8_t, 15>& line, std::array<int, 15>&
 			}
 			else if (leftfour)
 				record[pos] = SFOUR;
-			return record[pos];
+			return;
 		}
 	}
 	if (srange == 2)
@@ -121,7 +106,7 @@ int evaluation::analyse_line(std::array<uint8_t, 15>& line, std::array<int, 15>&
 					left3 = true;
 			}
 			else if (xr == num || line[xr + 1] != 0)
-				return 0;
+				return;
 		}
 		if (xr < num)
 		{
@@ -138,18 +123,18 @@ int evaluation::analyse_line(std::array<uint8_t, 15>& line, std::array<int, 15>&
 					record[xr] = STHREE;
 			}
 			else if (record[xl] == SFOUR)
-				return record[xl];
+				return;
 			else if (left3)
 				record[pos] = STHREE;
 		}
 		else
 		{
 			if (record[xl] == SFOUR)
-				return record[xl];
+				return;
 			if (left3)
 				record[pos] = STHREE;
 		}
-		return record[pos];
+		return;
 	}
 	if (srange == 1)
 	{
@@ -200,11 +185,11 @@ int evaluation::analyse_line(std::array<uint8_t, 15>& line, std::array<int, 15>&
 				else
 				{
 					if (record[xl] == SFOUR)
-						return record[xl];
+						return;
 					if (record[xl] == STHREE)
 					{
 						record[xl] = THREE;
-						return record[xl];
+						return;
 					}
 					if (left2)
 						record[pos] = TWO;
@@ -215,14 +200,14 @@ int evaluation::analyse_line(std::array<uint8_t, 15>& line, std::array<int, 15>&
 			else
 			{
 				if (record[xl] == SFOUR)
-					return record[xl];
+					return;
 				if (left2)
 					record[pos] = STWO;
 			}
 		}
-		return record[pos];
+		return;
 	}
-	return 0;
+	return;
 }
 
 void evaluation::analysis_horizon(chessboard&board, int i, int j)noexcept
@@ -294,19 +279,17 @@ int evaluation::__evaluate(chessboard&board, int turn)noexcept
 	reset();
 	for (int i = 0; i < 15; ++i)
 	{
-		auto boardrow = board.board[i];
-		auto recordrow = record[i];
 		for (int j = 0; j < 15; ++j)
 		{
-			if (boardrow[j] != 0)
+			if (board.board[i][j] != 0)
 			{
-				if (recordrow[j][0] == TODO)
+				if (record[i][j][0] == TODO)
 					analysis_horizon(board, i, j);
-				if (recordrow[j][1] == TODO)
+				if (record[i][j][1] == TODO)
 					analysis_vertical(board, i, j);
-				if (recordrow[j][2] == TODO)
+				if (record[i][j][2] == TODO)
 					analysis_left(board, i, j);
-				if (recordrow[j][3] == TODO)
+				if (record[i][j][3] == TODO)
 					analysis_right(board, i, j);
 			}
 		}
@@ -327,14 +310,15 @@ int evaluation::__evaluate(chessboard&board, int turn)noexcept
 			}
 		}
 	}
-	if (count[BLACK][FIVE])
-		return 9999 * checkturn(BLACK, turn);
-	if (count[WHITE][FIVE])
-		return 9999 * checkturn(WHITE, turn);
 	if (count[WHITE][SFOUR] >= 2)
 		++count[WHITE][FOUR];
 	if (count[BLACK][SFOUR] >= 2)
 		++count[BLACK][FOUR];
+
+	if (count[BLACK][FIVE])
+		return 9999 * checkturn(BLACK, turn);
+	if (count[WHITE][FIVE])
+		return 9999 * checkturn(WHITE, turn);
 	int wvalue = 0, bvalue = 0;
 	if (turn == WHITE)
 	{
@@ -412,35 +396,19 @@ int evaluation::__evaluate(chessboard&board, int turn)noexcept
 		if (count[WHITE][STWO])
 			wvalue += count[WHITE][STWO];
 	}
-	if (turn == WHITE)
-		return wvalue - bvalue;
-	return bvalue - wvalue;
+	return checkturn(turn, WHITE)*(wvalue - bvalue);
 }
 
-int evaluation::evaluate(chessboard&board, int turn)noexcept
+int evaluation::evaluate(chessboard&board, const int turn)noexcept
 {
 	int score = __evaluate(board, turn);
-	if (score < -9000)
+	const int stone = nturn[turn];
+	if (abs(score) > 9000)
 	{
-		int stone;
-		if (turn == 1)
-			stone = 2;
-		else
-			stone = 1;
+		const int x = sign(score);
 		for (int i = 0; i < 20; ++i)
 			if (count[stone][i] > 0)
-				score -= i;
-	}
-	else if (score > 9000)
-	{
-		int stone;
-		if (turn == 1)
-			stone = 2;
-		else
-			stone = 1;
-		for (int i = 0; i < 20; ++i)
-			if (count[stone][i] > 0)
-				score += i;
+				score += (i*x);
 	}
 	return score;
 }
