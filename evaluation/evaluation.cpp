@@ -226,10 +226,10 @@ int evaluation::analyse_line(std::array<int, 30>& line, std::array<int, 30>& rec
 	return 0;
 }
 
-void evaluation::analysis_horizon(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
+void evaluation::analysis_horizon(chessboard&board, int i, int j)noexcept
 {
 	for (int x = 0; x < 15; ++x)
-		line[x] = board[i][x];
+		line[x] = board.board[i][x];
 	analyse_line(line, result, 15, j);
 	for (int x = 0; x < 15; ++x)
 	{
@@ -238,10 +238,10 @@ void evaluation::analysis_horizon(std::array<std::array<int8_t, 15>, 15>&board, 
 	}
 }
 
-void evaluation::analysis_vertical(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
+void evaluation::analysis_vertical(chessboard&board, int i, int j)noexcept
 {
 	for (int x = 0; x < 15; ++x)
-		line[x] = board[x][j];
+		line[x] = board.board[x][j];
 	analyse_line(line, result, 15, i);
 	for (int x = 0; x < 15; ++x)
 	{
@@ -250,7 +250,7 @@ void evaluation::analysis_vertical(std::array<std::array<int8_t, 15>, 15>&board,
 	}
 }
 
-void evaluation::analysis_left(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
+void evaluation::analysis_left(chessboard&board, int i, int j)noexcept
 {
 	int x, y, k = 0;
 	if (i < j)
@@ -267,7 +267,7 @@ void evaluation::analysis_left(std::array<std::array<int8_t, 15>, 15>&board, int
 	{
 		if (x + k > 14 || y + k > 14)
 			break;
-		line[k] = board[y + k][x + k];
+		line[k] = board.board[y + k][x + k];
 		++k;
 	}
 	analyse_line(line, result, k, j - x);
@@ -278,7 +278,7 @@ void evaluation::analysis_left(std::array<std::array<int8_t, 15>, 15>&board, int
 	}
 }
 
-void evaluation::analysis_right(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
+void evaluation::analysis_right(chessboard&board, int i, int j)noexcept
 {
 	int x, y, k = 0;
 	if (14 - i < j)
@@ -295,7 +295,7 @@ void evaluation::analysis_right(std::array<std::array<int8_t, 15>, 15>&board, in
 	{
 		if (x + k > 14 || y - k < 0)
 			break;
-		line[k] = board[y - k][x + k];
+		line[k] = board.board[y - k][x + k];
 		++k;
 	}
 	analyse_line(line, result, k, j - x);
@@ -306,12 +306,12 @@ void evaluation::analysis_right(std::array<std::array<int8_t, 15>, 15>&board, in
 	}
 }
 
-int evaluation::__evaluate(std::array<std::array<int8_t, 15>, 15>&board, int turn)noexcept
+int evaluation::__evaluate(chessboard&board, int turn)noexcept
 {
 	reset();
 	for (int i = 0; i < 15; ++i)
 	{
-		auto boardrow = board[i];
+		auto boardrow = board.board[i];
 		auto recordrow = record[i];
 		for (int j = 0; j < 15; ++j)
 		{
@@ -332,7 +332,7 @@ int evaluation::__evaluate(std::array<std::array<int8_t, 15>, 15>&board, int tur
 	{
 		for (int j = 0; j < 15; ++j)
 		{
-			int stone = board[i][j];
+			int stone = board.board[i][j];
 			if (stone != 0)
 			{
 				for (int k = 0; k < 4; ++k)
@@ -434,7 +434,7 @@ int evaluation::__evaluate(std::array<std::array<int8_t, 15>, 15>&board, int tur
 	return bvalue - wvalue;
 }
 
-int evaluation::evaluate(std::array<std::array<int8_t, 15>, 15>&board, int turn)noexcept
+int evaluation::evaluate(chessboard&board, int turn)noexcept
 {
 	int score = __evaluate(board, turn);
 	if (score < -9000)

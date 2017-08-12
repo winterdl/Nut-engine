@@ -55,6 +55,7 @@ bool chessboard::put(const int row, const int col, const int x) noexcept
 	{
 		board[row][col] = x;
 		update_remotecell(row, col, true);
+		update_layer_2(row, col, true);
 		++number;
 		return true;
 	}
@@ -71,6 +72,7 @@ int chessboard::undo(const int row, const int col)noexcept
 	board[row][col] = 0;
 	--number;
 	update_remotecell(row, col, false);
+	update_layer_2(row, col, false);
 	return 0;
 }
 
@@ -354,6 +356,19 @@ void chessboard::update_remotecell(const int row, const  int col, const bool add
 				--remote_cell[i][j];
 		}
 	}
+}
+
+void chessboard::update_layer_2(const int row, const int col, const bool add) noexcept
+{
+	// 0 - horizontal
+	// 1 - vertical
+	int x;
+	if (add == false)
+		x = 0;
+	else
+		x = board[row][col];
+	layer_2[0][row][col] = x;
+	layer_2[1][col][row] = x;
 }
 
 std::vector<std::tuple<int, int8_t, int8_t>> chessboard::genmove() const noexcept

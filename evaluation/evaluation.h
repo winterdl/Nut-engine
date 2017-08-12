@@ -23,21 +23,21 @@ class DllExport evaluation
 {
 public:
 	evaluation()noexcept;
-	int evaluate(std::array<std::array<int8_t, 15>, 15>&, int turn)noexcept;
+	int evaluate(chessboard&, int turn)noexcept;
 private:
 	void reset()noexcept;
 	int analyse_line(std::array<int, 30>& line, std::array<int, 30>& record, int num, int pos)noexcept;
-	void analysis_horizon(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
-	void analysis_vertical(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
-	void analysis_left(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
-	void analysis_right(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
+	void analysis_horizon(chessboard&, int i, int j)noexcept;
+	void analysis_vertical(chessboard&, int i, int j)noexcept;
+	void analysis_left(chessboard&, int i, int j)noexcept;
+	void analysis_right(chessboard&, int i, int j)noexcept;
 	inline int checkturn(const int &side, const int &turn)const noexcept
 	{
 		if (side == turn)
 			return 1;
 		return -1;
 	}
-	int __evaluate(std::array<std::array<int8_t, 15>, 15>&, int turn)noexcept;
+	int __evaluate(chessboard&, int turn)noexcept;
 	const int STWO = 1, STHREE = 2, SFOUR = 3, TWO = 4, THREE = 5, FOUR = 6, FIVE = 7, DFOUR = 8,
 		FOURT = 9, DTHREE = 10, NOTYPE = 11, ANALYSED = 255, TODO = 0;
 	const int BLACK = 1, WHITE = 2;
