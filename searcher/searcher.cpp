@@ -63,7 +63,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 		nturn = 2;
 	else
 		nturn = 1;
-	int res = evaluator.evaluate(ref(board), turn);
+	int res = evaluator.evaluate(ref(board), turn, i, ii);
 	int checker = board.checkpoint(i, ii);
 	if (checker == turn)
 		return std::make_tuple(10000000 - ply, i, ii);
@@ -120,7 +120,7 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, 
 		nturn = 2;
 	else
 		nturn = 1;
-	int res = 0 - evaluator.evaluate(ref(board), turn);
+	int res = 0 - evaluator.evaluate(ref(board), turn, i, ii);
 	int checker = board.checkpoint(i, ii);
 	if (checker == turn)
 		return std::make_tuple(0 - 10000000 + ply, i, ii);

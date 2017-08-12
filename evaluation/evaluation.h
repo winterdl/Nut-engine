@@ -5,7 +5,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,7 @@ class DllExport evaluation
 {
 public:
 	evaluation()noexcept {};
-	int evaluate(chessboard&, const int turn)noexcept;
+	int evaluate(chessboard&, const int turn, const int row, const int col)noexcept;
 private:
 	inline void reset(chessboard& board)noexcept
 	{
@@ -56,7 +56,7 @@ private:
 			return -1;
 		return 1;
 	}
-	int __evaluate(chessboard&, int turn)noexcept;
+	int __evaluate(chessboard&, int turn, const int row, const int col)noexcept;
 	const int STWO = 1, STHREE = 2, SFOUR = 3, TWO = 4, THREE = 5, FOUR = 6, FIVE = 7, DFOUR = 8,
 		FOURT = 9, DTHREE = 10, NOTYPE = 11, ANALYSED = 255, TODO = 0;
 	const int BLACK = 1, WHITE = 2;

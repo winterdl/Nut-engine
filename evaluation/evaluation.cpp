@@ -274,7 +274,7 @@ void evaluation::analysis_right(chessboard&board, int i, int j)noexcept
 	}
 }
 
-int evaluation::__evaluate(chessboard&board, int turn)noexcept
+int evaluation::__evaluate(chessboard&board, int turn, const int row, const int col)noexcept
 {
 	reset(board);
 	for (int i = 0; i < 15; ++i)
@@ -294,6 +294,7 @@ int evaluation::__evaluate(chessboard&board, int turn)noexcept
 			}
 		}
 	}
+
 	for (int i = 0; i < 15; ++i)
 	{
 		for (int j = 0; j < 15; ++j)
@@ -399,9 +400,9 @@ int evaluation::__evaluate(chessboard&board, int turn)noexcept
 	return checkturn(turn, WHITE)*(wvalue - bvalue);
 }
 
-int evaluation::evaluate(chessboard&board, const int turn)noexcept
+int evaluation::evaluate(chessboard&board, const int turn, const int row, const int col)noexcept
 {
-	int score = __evaluate(board, turn);
+	int score = __evaluate(board, turn, row, col);
 	const int stone = nturn[turn];
 	if (abs(score) > 9000)
 	{
