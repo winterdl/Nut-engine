@@ -20,6 +20,13 @@
 chessboard::chessboard()noexcept
 {
 	reset();
+	for (int i = 0; i < 15; ++i)
+	{
+		for (int ii = 0; ii < 15; ++ii)
+		{
+			pos[i][ii] = 7 - max(abs(i - 7), abs(ii - 7));
+		}
+	}
 }
 
 //reset the chess board
@@ -256,9 +263,17 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 		}
 	}
 	counto = countx = 0;
-	int x = row - col, y = 0;
-	while (x < 0)
-		++x, ++y;
+	int x, y;
+	if (row < col)
+	{
+		y = col - row;
+		x = 0;
+	}
+	else
+	{
+		y = 0;
+		x = row - col;
+	}
 	for (; x < 15 && y < 15; ++x, ++y)
 	{
 		if ((countx != 0 || counto != 0) && board[x][y] == 0)
@@ -285,15 +300,17 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 		}
 	}
 	counto = countx = 0;
-	int i = row + col;
-	x = 0;
-	y = i;
-	while (y >= 15)
+	if (14 - row < col)
 	{
-		++x;
-		--y;
+		y = col - 14 + row;
+		x = 14;
 	}
-	for (; x < 15 && y >= 0; ++x, --y)
+	else
+	{
+		y = 0;
+		x = row + col;
+	}
+	for (; x >= 0 && y < 15; --x, ++y)
 	{
 		if ((countx != 0 || counto != 0) && board[x][y] == 0)
 		{
@@ -350,7 +367,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> chessboard::genmove() const noexcep
 		{
 			if (remote_cell[i][ii] != 0 && board[i][ii] == 0)
 			{
-				score = evaluator.pos[i][ii];
+				score = pos[i][ii];
 				moves.emplace_back(std::make_tuple(score, i, ii));
 			}
 		}

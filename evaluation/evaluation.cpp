@@ -23,13 +23,6 @@ evaluation::evaluation()noexcept
 	memset(count, 0, sizeof(count));
 	memset(record, 0, sizeof(record));
 	memset(line, 0, sizeof(line));
-	for (int i = 0; i < 15; ++i)
-	{
-		for (int ii = 0; ii < 15; ++ii)
-		{
-			pos[i][ii] = 7 - max(abs(i - 7), abs(ii - 7));
-		}
-	}
 }
 
 void evaluation::reset()noexcept
@@ -239,7 +232,7 @@ int evaluation::analyse_line(int line[30], int record[30], int num, int pos)noex
 	return 0;
 }
 
-int evaluation::analysis_horizon(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
+void evaluation::analysis_horizon(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
 {
 	for (int x = 0; x < 15; ++x)
 		line[x] = board[i][x];
@@ -249,10 +242,9 @@ int evaluation::analysis_horizon(std::array<std::array<int8_t, 15>, 15>&board, i
 		if (result[x] != TODO)
 			record[i][x][0] = result[x];
 	}
-	return record[i][j][0];
 }
 
-int evaluation::analysis_vertical(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
+void evaluation::analysis_vertical(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
 {
 	for (int x = 0; x < 15; ++x)
 		line[x] = board[x][j];
@@ -262,10 +254,9 @@ int evaluation::analysis_vertical(std::array<std::array<int8_t, 15>, 15>&board, 
 		if (result[x] != TODO)
 			record[x][j][1] = result[x];
 	}
-	return record[i][j][1];
 }
 
-int evaluation::analysis_left(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
+void evaluation::analysis_left(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
 {
 	int x, y, k = 0;
 	if (i < j)
@@ -291,23 +282,20 @@ int evaluation::analysis_left(std::array<std::array<int8_t, 15>, 15>&board, int 
 		if (result[s] != TODO)
 			record[y + s][x + s][2] = result[s];
 	}
-	return record[i][j][2];
 }
 
-int evaluation::analysis_right(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
+void evaluation::analysis_right(std::array<std::array<int8_t, 15>, 15>&board, int i, int j)noexcept
 {
-	int x, y, realnum, k = 0;
+	int x, y, k = 0;
 	if (14 - i < j)
 	{
 		x = j - 14 + i;
 		y = 14;
-		realnum = 14 - i;
 	}
 	else
 	{
 		x = 0;
 		y = i + j;
-		realnum = j;
 	}
 	while (k < 15)
 	{
@@ -322,7 +310,6 @@ int evaluation::analysis_right(std::array<std::array<int8_t, 15>, 15>&board, int
 		if (result[s] != TODO)
 			record[y - s][x + s][3] = result[s];
 	}
-	return record[i][j][3];
 }
 
 int evaluation::__evaluate(std::array<std::array<int8_t, 15>, 15>&board, int turn)noexcept
@@ -459,23 +446,6 @@ int evaluation::__evaluate(std::array<std::array<int8_t, 15>, 15>&board, int tur
 		if (count[WHITE][STWO])
 			wvalue += count[WHITE][STWO];
 	}
-	//int wc = 0, bc = 0;
-	//for (int i = 0; i < 15; ++i)
-	//{
-	//	for (int j = 0; j < 15; ++j)
-	//	{
-	//		int stone = board[i][j];
-	//		if (stone)
-	//		{
-	//			if (stone == WHITE)
-	//				wc += pos[i][j];
-	//			else
-	//				bc += pos[i][j];
-	//		}
-	//	}
-	//}
-	//wvalue += wc;
-	//bvalue += bc;
 	if (turn == WHITE)
 		return wvalue - bvalue;
 	return bvalue - wvalue;

@@ -24,14 +24,13 @@ class DllExport evaluation
 public:
 	evaluation()noexcept;
 	int evaluate(std::array<std::array<int8_t, 15>, 15>&, int turn)noexcept;
-	int pos[15][15];
 private:
 	void reset()noexcept;
 	int analyse_line(int line[30], int record[30], int num, int pos)noexcept;
-	int analysis_horizon(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
-	int analysis_vertical(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
-	int analysis_left(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
-	int analysis_right(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
+	void analysis_horizon(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
+	void analysis_vertical(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
+	void analysis_left(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
+	void analysis_right(std::array<std::array<int8_t, 15>, 15>&, int i, int j)noexcept;
 	int __evaluate(std::array<std::array<int8_t, 15>, 15>&, int turn)noexcept;
 	const int STWO = 1, STHREE = 2, SFOUR = 3, TWO = 4, THREE = 5, FOUR = 6, FIVE = 7, DFOUR = 8,
 		FOURT = 9, DTHREE = 10, NOTYPE = 11, ANALYSED = 255, TODO = 0;
