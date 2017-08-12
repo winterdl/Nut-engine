@@ -17,9 +17,15 @@
 #include "stdafx.h"
 #include "evaluation.h"
 
-void evaluation::reset_point(chessboard & board, int row, int col) noexcept
+void evaluation::reset_point(chessboard &board, int row, int col) noexcept
 {
-	memset(count, 0, sizeof(count));
+	for (int i = 0; i < 3; ++i)
+	{
+		for (int ii = 0; ii < 20; ++ii)
+		{
+			board.layer_4[i][ii] = 0;
+		}
+	}
 	if (row < 0 || col < 0 || row >= 15 || col >= 15)
 	{
 		for (int i = 0; i < 15; ++i)
@@ -75,7 +81,7 @@ void evaluation::reset_point(chessboard & board, int row, int col) noexcept
 	}
 }
 
-void evaluation::analyse_line(const std::array<uint8_t, 15>& line, int num, const int pos)noexcept
+void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, const int pos) noexcept
 {
 	std::fill_n(result.begin(), num, TODO);
 	if (num < 5)
@@ -268,7 +274,7 @@ void evaluation::analyse_line(const std::array<uint8_t, 15>& line, int num, cons
 	return;
 }
 
-void evaluation::analysis_horizon(chessboard&board, int i, int j)noexcept
+void evaluation::analysis_horizon(chessboard &board, int i, int j) noexcept
 {
 	analyse_line(std::ref(board.layer_2[0][i]), 15, j);
 	for (int x = 0; x < 15; ++x)
@@ -278,7 +284,7 @@ void evaluation::analysis_horizon(chessboard&board, int i, int j)noexcept
 	}
 }
 
-void evaluation::analysis_vertical(chessboard&board, int i, int j)noexcept
+void evaluation::analysis_vertical(chessboard &board, int i, int j) noexcept
 {
 	analyse_line(std::ref(board.layer_2[1][j]), 15, i);
 	for (int x = 0; x < 15; ++x)
@@ -288,7 +294,7 @@ void evaluation::analysis_vertical(chessboard&board, int i, int j)noexcept
 	}
 }
 
-void evaluation::analysis_left(chessboard&board, int i, int j)noexcept
+void evaluation::analysis_left(chessboard &board, int i, int j) noexcept
 {
 	int x, y, k = 0;
 	if (i < j)
@@ -310,7 +316,7 @@ void evaluation::analysis_left(chessboard&board, int i, int j)noexcept
 	}
 }
 
-void evaluation::analysis_right(chessboard&board, int i, int j)noexcept
+void evaluation::analysis_right(chessboard &board, int i, int j) noexcept
 {
 	int x, y, k = 0;
 	if (14 - i < j)
@@ -332,15 +338,13 @@ void evaluation::analysis_right(chessboard&board, int i, int j)noexcept
 	}
 }
 
-int evaluation::__evaluate(chessboard&board, int turn, const int row, const int col, bool pure)noexcept
+int evaluation::__evaluate(chessboard &board, int turn, const int row, const int col, bool pure) noexcept
 {
 	reset_point(board, row, col);
 	evaluate_point(board, row, col);
 
-
 	if (pure)
 		return 0;
-
 
 	for (int i = 0; i < 15; ++i)
 	{
@@ -352,102 +356,102 @@ int evaluation::__evaluate(chessboard&board, int turn, const int row, const int 
 				for (int k = 0; k < 4; ++k)
 				{
 					int ch = board.layer_3[i][j][k];
-					if (ch >= STWO&&ch <= FIVE)
-						++count[stone][ch];
+					if (ch >= STWO && ch <= FIVE)
+						++board.layer_4[stone][ch];
 				}
 			}
 		}
 	}
-	if (count[WHITE][SFOUR] >= 2)
-		++count[WHITE][FOUR];
-	if (count[BLACK][SFOUR] >= 2)
-		++count[BLACK][FOUR];
+	if (board.layer_4[WHITE][SFOUR] >= 2)
+		++board.layer_4[WHITE][FOUR];
+	if (board.layer_4[BLACK][SFOUR] >= 2)
+		++board.layer_4[BLACK][FOUR];
 
-	if (count[BLACK][FIVE])
+	if (board.layer_4[BLACK][FIVE])
 		return 9999 * checkturn(BLACK, turn);
-	if (count[WHITE][FIVE])
+	if (board.layer_4[WHITE][FIVE])
 		return 9999 * checkturn(WHITE, turn);
 	int wvalue = 0, bvalue = 0;
 	if (turn == WHITE)
 	{
-		if (count[WHITE][FOUR] > 0)
+		if (board.layer_4[WHITE][FOUR] > 0)
 			return 9990;
-		if (count[WHITE][SFOUR] > 0)
+		if (board.layer_4[WHITE][SFOUR] > 0)
 			return 9980;
-		if (count[BLACK][FOUR] > 0)
+		if (board.layer_4[BLACK][FOUR] > 0)
 			return -9970;
-		if (count[BLACK][SFOUR] && count[BLACK][THREE])
+		if (board.layer_4[BLACK][SFOUR] && board.layer_4[BLACK][THREE])
 			return -9960;
-		if (count[WHITE][THREE] && count[BLACK][SFOUR] == 0)
+		if (board.layer_4[WHITE][THREE] && board.layer_4[BLACK][SFOUR] == 0)
 			return 9950;
-		if (count[BLACK][THREE] > 1 &&
-			count[WHITE][SFOUR] == 0 &&
-			count[WHITE][THREE] == 0 &&
-			count[WHITE][STHREE] == 0)
+		if (board.layer_4[BLACK][THREE] > 1 &&
+			board.layer_4[WHITE][SFOUR] == 0 &&
+			board.layer_4[WHITE][THREE] == 0 &&
+			board.layer_4[WHITE][STHREE] == 0)
 			return -9940;
-		if (count[WHITE][THREE] > 1)
+		if (board.layer_4[WHITE][THREE] > 1)
 			wvalue += 2000;
-		else if (count[WHITE][THREE])
+		else if (board.layer_4[WHITE][THREE])
 			wvalue += 200;
-		if (count[BLACK][THREE] > 1)
+		if (board.layer_4[BLACK][THREE] > 1)
 			bvalue += 500;
-		else if (count[BLACK][THREE])
+		else if (board.layer_4[BLACK][THREE])
 			bvalue += 100;
-		if (count[WHITE][STHREE])
-			wvalue += count[WHITE][STHREE] * 10;
-		if (count[BLACK][STHREE])
-			bvalue += count[BLACK][STHREE] * 10;
-		if (count[WHITE][TWO])
-			wvalue += count[WHITE][TWO] * 4;
-		if (count[BLACK][TWO])
-			bvalue += count[BLACK][TWO] * 4;
-		if (count[WHITE][STWO])
-			wvalue += count[WHITE][STWO];
-		if (count[BLACK][STWO])
-			bvalue += count[BLACK][STWO];
+		if (board.layer_4[WHITE][STHREE])
+			wvalue += board.layer_4[WHITE][STHREE] * 10;
+		if (board.layer_4[BLACK][STHREE])
+			bvalue += board.layer_4[BLACK][STHREE] * 10;
+		if (board.layer_4[WHITE][TWO])
+			wvalue += board.layer_4[WHITE][TWO] * 4;
+		if (board.layer_4[BLACK][TWO])
+			bvalue += board.layer_4[BLACK][TWO] * 4;
+		if (board.layer_4[WHITE][STWO])
+			wvalue += board.layer_4[WHITE][STWO];
+		if (board.layer_4[BLACK][STWO])
+			bvalue += board.layer_4[BLACK][STWO];
 	}
 	else
 	{
-		if (count[BLACK][FOUR] > 0)
+		if (board.layer_4[BLACK][FOUR] > 0)
 			return 9990;
-		if (count[BLACK][SFOUR] > 0)
+		if (board.layer_4[BLACK][SFOUR] > 0)
 			return 9980;
-		if (count[WHITE][FOUR] > 0)
+		if (board.layer_4[WHITE][FOUR] > 0)
 			return -9970;
-		if (count[WHITE][SFOUR] && count[WHITE][THREE])
+		if (board.layer_4[WHITE][SFOUR] && board.layer_4[WHITE][THREE])
 			return -9960;
-		if (count[BLACK][THREE] && count[WHITE][SFOUR] == 0)
+		if (board.layer_4[BLACK][THREE] && board.layer_4[WHITE][SFOUR] == 0)
 			return 9950;
-		if (count[WHITE][THREE] > 1 &&
-			count[BLACK][SFOUR] == 0 &&
-			count[BLACK][THREE] == 0 &&
-			count[BLACK][STHREE] == 0)
+		if (board.layer_4[WHITE][THREE] > 1 &&
+			board.layer_4[BLACK][SFOUR] == 0 &&
+			board.layer_4[BLACK][THREE] == 0 &&
+			board.layer_4[BLACK][STHREE] == 0)
 			return -9940;
-		if (count[BLACK][THREE] > 1)
+		if (board.layer_4[BLACK][THREE] > 1)
 			bvalue += 2000;
-		else if (count[BLACK][THREE])
+		else if (board.layer_4[BLACK][THREE])
 			bvalue += 200;
-		if (count[WHITE][THREE] > 1)
+		if (board.layer_4[WHITE][THREE] > 1)
 			wvalue += 500;
-		else if (count[WHITE][THREE])
+		else if (board.layer_4[WHITE][THREE])
 			wvalue += 100;
-		if (count[BLACK][STHREE])
-			bvalue += count[BLACK][STHREE] * 10;
-		if (count[WHITE][STHREE])
-			wvalue += count[WHITE][STHREE] * 10;
-		if (count[BLACK][TWO])
-			bvalue += count[BLACK][TWO] * 4;
-		if (count[WHITE][TWO])
-			wvalue += count[WHITE][TWO] * 4;
-		if (count[BLACK][STWO])
-			bvalue += count[BLACK][STWO];
-		if (count[WHITE][STWO])
-			wvalue += count[WHITE][STWO];
+		if (board.layer_4[BLACK][STHREE])
+			bvalue += board.layer_4[BLACK][STHREE] * 10;
+		if (board.layer_4[WHITE][STHREE])
+			wvalue += board.layer_4[WHITE][STHREE] * 10;
+		if (board.layer_4[BLACK][TWO])
+			bvalue += board.layer_4[BLACK][TWO] * 4;
+		if (board.layer_4[WHITE][TWO])
+			wvalue += board.layer_4[WHITE][TWO] * 4;
+		if (board.layer_4[BLACK][STWO])
+			bvalue += board.layer_4[BLACK][STWO];
+		if (board.layer_4[WHITE][STWO])
+			wvalue += board.layer_4[WHITE][STWO];
 	}
-	return checkturn(turn, WHITE)*(wvalue - bvalue);
+	return checkturn(turn, WHITE) * (wvalue - bvalue);
 }
 
-void evaluation::evaluate_point(chessboard & board, int row, int col) noexcept
+void evaluation::evaluate_point(chessboard &board, int row, int col) noexcept
 {
 	if (row < 0 || col < 0 || row >= 15 || col >= 15)
 	{
@@ -515,7 +519,7 @@ void evaluation::evaluate_point(chessboard & board, int row, int col) noexcept
 	}
 }
 
-int evaluation::evaluate(chessboard&board, const int turn, const int row, const int col, bool pure)noexcept
+int evaluation::evaluate(chessboard &board, const int turn, const int row, const int col, bool pure) noexcept
 {
 	int score = __evaluate(board, turn, row, col, pure);
 	if (pure)
@@ -525,8 +529,8 @@ int evaluation::evaluate(chessboard&board, const int turn, const int row, const 
 	{
 		const int x = sign(score);
 		for (int i = 0; i < 20; ++i)
-			if (count[stone][i] > 0)
-				score += (i*x);
+			if (board.layer_4[stone][i] > 0)
+				score += (i * x);
 	}
 	return score;
 }

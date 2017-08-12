@@ -17,7 +17,7 @@
 #include "stdafx.h"
 #include "chessboard.h"
 
-chessboard::chessboard()noexcept
+chessboard::chessboard() noexcept
 {
 	reset();
 	for (int i = 0; i < 15; ++i)
@@ -31,7 +31,7 @@ chessboard::chessboard()noexcept
 
 //reset the chess board
 
-void chessboard::reset()noexcept
+void chessboard::reset() noexcept
 {
 	number = 0;
 	for (int i = 0; i < 15; ++i)
@@ -75,7 +75,7 @@ bool chessboard::put(const int row, const int col, const int x) noexcept
 	}
 }
 
-int chessboard::undo(const int row, const int col)noexcept
+int chessboard::undo(const int row, const int col) noexcept
 {
 	if (row < 0 || row >= 15 || col < 0 || col >= 15 || board[row][col] == 0)
 		return 2;
@@ -86,7 +86,7 @@ int chessboard::undo(const int row, const int col)noexcept
 	return 0;
 }
 
-int chessboard::check()const noexcept
+int chessboard::check() const noexcept
 {
 	int counto = 0, countx = 0;
 	for (int i = 0; i < 15; ++i)
@@ -350,7 +350,7 @@ int chessboard::checkpoint(const int row, const int col) const noexcept
 	return 0;
 }
 
-void chessboard::update_remotecell(const int row, const  int col, const bool add) noexcept
+void chessboard::update_remotecell(const int row, const int col, const bool add) noexcept
 {
 	for (int i = row - 2; i <= row + 2; ++i)
 	{
@@ -406,7 +406,7 @@ void chessboard::update_layer_2(const int row, const int col, const bool add) no
 
 std::vector<std::tuple<int, int8_t, int8_t>> chessboard::genmove() const noexcept
 {
-	std::vector<std::tuple<int, int8_t, int8_t>>moves;
+	std::vector<std::tuple<int, int8_t, int8_t>> moves;
 	moves.reserve(64);
 	int score;
 	for (int i = 0; i < 15; ++i)
@@ -426,7 +426,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> chessboard::genmove() const noexcep
 	return moves;
 }
 
-bool chessboard::Fullboard()const noexcept
+bool chessboard::Fullboard() const noexcept
 {
 	return number == 15 * 15;
 }
