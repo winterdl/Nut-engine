@@ -444,21 +444,68 @@ int evaluation::__evaluate(chessboard&board, int turn, const int row, const int 
 
 void evaluation::evaluate_point(chessboard & board, int row, int col) noexcept
 {
-	for (int i = 0; i < 15; ++i)
+	if (row < 0 || col < 0 || row >= 15 || col >= 15)
 	{
-		for (int j = 0; j < 15; ++j)
+		for (int i = 0; i < 15; ++i)
 		{
-			if (board.board[i][j] != 0)
+			for (int j = 0; j < 15; ++j)
 			{
-				if (board.layer_3[i][j][0] == TODO)
-					analysis_horizon(board, i, j);
-				if (board.layer_3[i][j][1] == TODO)
-					analysis_vertical(board, i, j);
-				if (board.layer_3[i][j][2] == TODO)
-					analysis_left(board, i, j);
-				if (board.layer_3[i][j][3] == TODO)
-					analysis_right(board, i, j);
+				if (board.board[i][j] != 0)
+				{
+					if (board.layer_3[i][j][0] == TODO)
+						analysis_horizon(board, i, j);
+					if (board.layer_3[i][j][1] == TODO)
+						analysis_vertical(board, i, j);
+					if (board.layer_3[i][j][2] == TODO)
+						analysis_left(board, i, j);
+					if (board.layer_3[i][j][3] == TODO)
+						analysis_right(board, i, j);
+				}
 			}
+		}
+	}
+	else
+	{
+		for (int ii = 0; ii < 15; ++ii)
+		{
+			if (board.board[row][ii] != 0 && board.layer_3[row][ii][0] == TODO)
+				analysis_horizon(board, row, ii);
+		}
+		for (int ii = 0; ii < 15; ++ii)
+		{
+			if (board.board[ii][col] != 0 && board.layer_3[ii][col][1] == TODO)
+				analysis_vertical(board, ii, col);
+		}
+		int x, y;
+		if (row < col)
+		{
+			y = col - row;
+			x = 0;
+		}
+		else
+		{
+			y = 0;
+			x = row - col;
+		}
+		for (; x < 15 && y < 15; ++x, ++y)
+		{
+			if (board.board[x][y] != 0 && board.layer_3[x][y][2] == TODO)
+				analysis_left(board, x, y);
+		}
+		if (14 - row < col)
+		{
+			y = col - 14 + row;
+			x = 14;
+		}
+		else
+		{
+			y = 0;
+			x = row + col;
+		}
+		for (; x >= 0 && y < 15; --x, ++y)
+		{
+			if (board.board[x][y] != 0 && board.layer_3[x][y][3] == TODO)
+				analysis_right(board, x, y);
 		}
 	}
 }
