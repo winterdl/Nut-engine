@@ -44,7 +44,7 @@ void chessboard::reset()noexcept
 	}
 	for (int x = 0; x < 4; ++x)
 	{
-		for (int i = 0; i < 15; ++i)
+		for (int i = 0; i < 29; ++i)
 		{
 			for (int ii = 0; ii < 15; ++ii)
 			{
@@ -372,13 +372,25 @@ void chessboard::update_layer_2(const int row, const int col, const bool add) no
 {
 	// 0 - horizontal
 	// 1 - vertical
-	int x;
+	int xx;
 	if (add == false)
-		x = 0;
+		xx = 0;
 	else
-		x = board[row][col];
-	layer_2[0][row][col] = x;
-	layer_2[1][col][row] = x;
+		xx = board[row][col];
+	layer_2[0][row][col] = xx;
+	layer_2[1][col][row] = xx;
+	int x, y;
+	if (row < col)
+	{
+		x = col - row;
+		y = 0;
+	}
+	else
+	{
+		x = 0;
+		y = row - col;
+	}
+	layer_2[2][row - col + 14][col - x] = xx;
 }
 
 std::vector<std::tuple<int, int8_t, int8_t>> chessboard::genmove() const noexcept

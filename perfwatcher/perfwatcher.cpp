@@ -30,7 +30,7 @@ int main()
 			turn = 2;
 		else
 			turn = 1;
-		auto x = wrapper.Putcomputer(turn, 10000);
+		auto x = wrapper.Putcomputer(turn, 20000);
 		wrapper.Put(get<1>(x), get<2>(x), turn);
 		if (wrapper.Checkwin(get<1>(x), get<2>(x)))
 			break;
