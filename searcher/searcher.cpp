@@ -40,6 +40,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 			v = com;
 		ress.push_back(com);
 		board.undo(ref(std::get<1>(x)), ref(std::get<2>(x)));
+		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
 		alpha = max(alpha, std::get<0>(v));
 	}
 	sort(ress.rbegin(), ress.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
@@ -49,6 +50,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int turn, chessboard board, int depth, int timeout)noexcept
 {
 	timeoutnum = timeout;
+	evaluator.evaluate(ref(board), turn, -1, -1, true);
 	return max_value(turn, ref(board), -0x7fffffff, 0x7fffffff, depth, -1, -1, 0);
 }
 
@@ -63,7 +65,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 		nturn = 2;
 	else
 		nturn = 1;
-	int res = evaluator.evaluate(ref(board), turn, i, ii);
+	int res = evaluator.evaluate(ref(board), turn, i, ii, false);
 	int checker = board.checkpoint(i, ii);
 	if (checker == turn)
 		return std::make_tuple(10000000 - ply, i, ii);
@@ -106,6 +108,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 		if (std::get<0>(v) < std::get<0>(com))
 			v = com;
 		board.undo(ref(std::get<1>(x)), ref(std::get<2>(x)));
+		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
 		if (std::get<0>(v) >= beta)
 			return v;
 		alpha = max(alpha, std::get<0>(v));
@@ -120,7 +123,7 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, 
 		nturn = 2;
 	else
 		nturn = 1;
-	int res = 0 - evaluator.evaluate(ref(board), turn, i, ii);
+	int res = 0 - evaluator.evaluate(ref(board), turn, i, ii, false);
 	int checker = board.checkpoint(i, ii);
 	if (checker == turn)
 		return std::make_tuple(0 - 10000000 + ply, i, ii);
@@ -138,6 +141,7 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, 
 		if (get<0>(v) > get<0>(com))
 			v = com;
 		board.undo(ref(std::get<1>(x)), ref(std::get<2>(x)));
+		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
 		if (std::get<0>(v) <= alpha)
 			return v;
 		beta = min(beta, std::get<0>(v));

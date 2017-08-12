@@ -23,7 +23,7 @@ class DllExport evaluation
 {
 public:
 	evaluation()noexcept {};
-	int evaluate(chessboard&, const int turn, const int row, const int col)noexcept;
+	int evaluate(chessboard&, const int turn, const int row, const int col, bool pure)noexcept;
 private:
 	void reset_point(chessboard& board, int row, int col)noexcept;
 	void analyse_line(const std::array<uint8_t, 15>& line, int num, const int pos)noexcept;
@@ -43,7 +43,7 @@ private:
 			return -1;
 		return 1;
 	}
-	int __evaluate(chessboard&, int turn, const int row, const int col)noexcept;
+	int __evaluate(chessboard&, int turn, const int row, const int col, bool pure)noexcept;
 	void evaluate_point(chessboard& board, int row, int col)noexcept;
 	const int STWO = 1, STHREE = 2, SFOUR = 3, TWO = 4, THREE = 5, FOUR = 6, FIVE = 7, DFOUR = 8,
 		FOURT = 9, DTHREE = 10, NOTYPE = 11, ANALYSED = 255, TODO = 0;
