@@ -25,20 +25,7 @@ public:
 	evaluation()noexcept {};
 	int evaluate(chessboard&, const int turn, const int row, const int col)noexcept;
 private:
-	inline void reset(chessboard& board)noexcept
-	{
-		memset(count, 0, sizeof(count));
-		for (int i = 0; i < 15; ++i)
-		{
-			for (int ii = 0; ii < 15; ++ii)
-			{
-				board.layer_3[i][ii][0] = 0;
-				board.layer_3[i][ii][1] = 0;
-				board.layer_3[i][ii][2] = 0;
-				board.layer_3[i][ii][3] = 0;
-			}
-		}
-	}
+	void reset_point(chessboard& board, int row, int col)noexcept;
 	void analyse_line(const std::array<uint8_t, 15>& line, int num, const int pos)noexcept;
 	void analysis_horizon(chessboard&, int i, int j)noexcept;
 	void analysis_vertical(chessboard&, int i, int j)noexcept;
@@ -57,6 +44,7 @@ private:
 		return 1;
 	}
 	int __evaluate(chessboard&, int turn, const int row, const int col)noexcept;
+	void evaluate_point(chessboard& board, int row, int col)noexcept;
 	const int STWO = 1, STHREE = 2, SFOUR = 3, TWO = 4, THREE = 5, FOUR = 6, FIVE = 7, DFOUR = 8,
 		FOURT = 9, DTHREE = 10, NOTYPE = 11, ANALYSED = 255, TODO = 0;
 	const int BLACK = 1, WHITE = 2;

@@ -17,6 +17,21 @@
 #include "stdafx.h"
 #include "evaluation.h"
 
+void evaluation::reset_point(chessboard & board, int row, int col) noexcept
+{
+	memset(count, 0, sizeof(count));
+	for (int i = 0; i < 15; ++i)
+	{
+		for (int ii = 0; ii < 15; ++ii)
+		{
+			board.layer_3[i][ii][0] = 0;
+			board.layer_3[i][ii][1] = 0;
+			board.layer_3[i][ii][2] = 0;
+			board.layer_3[i][ii][3] = 0;
+		}
+	}
+}
+
 void evaluation::analyse_line(const std::array<uint8_t, 15>& line, int num, const int pos)noexcept
 {
 	std::fill_n(result.begin(), num, TODO);
@@ -276,24 +291,8 @@ void evaluation::analysis_right(chessboard&board, int i, int j)noexcept
 
 int evaluation::__evaluate(chessboard&board, int turn, const int row, const int col)noexcept
 {
-	reset(board);
-	for (int i = 0; i < 15; ++i)
-	{
-		for (int j = 0; j < 15; ++j)
-		{
-			if (board.board[i][j] != 0)
-			{
-				if (board.layer_3[i][j][0] == TODO)
-					analysis_horizon(board, i, j);
-				if (board.layer_3[i][j][1] == TODO)
-					analysis_vertical(board, i, j);
-				if (board.layer_3[i][j][2] == TODO)
-					analysis_left(board, i, j);
-				if (board.layer_3[i][j][3] == TODO)
-					analysis_right(board, i, j);
-			}
-		}
-	}
+	reset_point(board, row, col);
+	evaluate_point(board, row, col);
 
 	for (int i = 0; i < 15; ++i)
 	{
@@ -398,6 +397,27 @@ int evaluation::__evaluate(chessboard&board, int turn, const int row, const int 
 			wvalue += count[WHITE][STWO];
 	}
 	return checkturn(turn, WHITE)*(wvalue - bvalue);
+}
+
+void evaluation::evaluate_point(chessboard & board, int row, int col) noexcept
+{
+	for (int i = 0; i < 15; ++i)
+	{
+		for (int j = 0; j < 15; ++j)
+		{
+			if (board.board[i][j] != 0)
+			{
+				if (board.layer_3[i][j][0] == TODO)
+					analysis_horizon(board, i, j);
+				if (board.layer_3[i][j][1] == TODO)
+					analysis_vertical(board, i, j);
+				if (board.layer_3[i][j][2] == TODO)
+					analysis_left(board, i, j);
+				if (board.layer_3[i][j][3] == TODO)
+					analysis_right(board, i, j);
+			}
+		}
+	}
 }
 
 int evaluation::evaluate(chessboard&board, const int turn, const int row, const int col)noexcept
