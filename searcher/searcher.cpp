@@ -22,7 +22,7 @@ using namespace std;
 
 std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, chessboard board, int depth, int current) noexcept
 {
-	if (current <= 3)
+	if (current <= 2)
 		return board.genmove();
 	int alpha = -0x7fffffff, beta = 0x7fffffff;
 	std::vector<std::tuple<int, int8_t, int8_t>> ress;
