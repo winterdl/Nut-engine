@@ -24,7 +24,7 @@ int main()
 	chrono::steady_clock clock;
 	int turn = 2;
 	auto start = clock.now();
-	decltype(start) end;
+	decltype(start) end = clock.now();
 	while (wrapper.Fullboard() == false)
 	{
 		if (turn == 1)
@@ -35,9 +35,10 @@ int main()
 		wrapper.Put(get<1>(x), get<2>(x), turn);
 		if (wrapper.Checkwin(get<1>(x), get<2>(x)))
 			break;
+		__int64 xx = chrono::duration_cast<chrono::seconds>(clock.now() - end).count();
 		end = clock.now();
-		cout << turn << ": " << static_cast<char>(get<1>(x) + 'A') << " " << static_cast<char>('A' + get<2>(x)) << ": " << get<0>(x) << endl;
-		cout << "Duration: " << chrono::duration_cast<chrono::seconds>(end - start).count() << " s." << endl;
+		cout << turn << ": " << static_cast<char>(get<1>(x) + 'A') << " " << static_cast<char>('A' + get<2>(x)) << ": " << get<0>(x) <<
+			"   Duration: " << xx << " s." << endl;
 	}
 	end = clock.now();
 	cout << "Duration: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms." << endl;

@@ -47,7 +47,8 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 	}
 	sort(ress.rbegin(), ress.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
 	const int maxnum = 16;
-	if (ress.size() > maxnum)
+	size_t sizer = ress.size();
+	if (sizer > maxnum)
 		ress.resize(maxnum);
 	return ress;
 }
