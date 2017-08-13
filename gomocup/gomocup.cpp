@@ -99,8 +99,8 @@ void brain_turn()
 	std::tuple<int, int8_t, int8_t>putter = AI.Putcomputer(2, info_timeout_turn);
 	x = std::get<1>(putter);
 	y = std::get<2>(putter);
-	do_mymove(x, y);
 	pipeOut("MESSAGE %c%c: %d", static_cast<char>(x + 'A'), static_cast<char>(y + 'A'), std::get<0>(putter));
+	do_mymove(x, y);
 }
 
 /* delete temporary files, free resources */
