@@ -19,17 +19,7 @@
 
 void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noexcept
 {
-	if (!pure)
-	{
-		for (int i = 0; i < 3; ++i)
-		{
-			for (int ii = 0; ii < 20; ++ii)
-			{
-				board.layer_4[i][ii] = 0;
-			}
-		}
-	}
-	else
+	if (pure)
 	{
 		if (row < 0 || col < 0 || row >= 15 || col >= 15)
 		{
@@ -82,6 +72,16 @@ void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noe
 			for (; x >= 0 && y < 15; --x, ++y)
 			{
 				board.layer_3[x][y][3] = 0;
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			for (int ii = 0; ii < 20; ++ii)
+			{
+				board.layer_4[i][ii] = 0;
 			}
 		}
 	}
