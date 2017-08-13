@@ -20,6 +20,7 @@
 
 class DllExport chessboard
 {
+	friend class evaluation;
   public:
 	chessboard() noexcept;
 	void reset() noexcept;
@@ -29,6 +30,7 @@ class DllExport chessboard
 	int undo(const int row, const int col) noexcept;
 	int checkpoint(const int row, const int col) const noexcept;
 	std::vector<std::tuple<int, int8_t, int8_t>> genmove() const noexcept;
+protected:
 	std::array<std::array<int8_t, 15>, 15> board;
 	std::array<std::array<std::array<uint8_t, 15>, 29>, 4> layer_2;
 	std::array<std::array<std::array<int, 4>, 15>, 15> layer_3; //[row][col][direction]

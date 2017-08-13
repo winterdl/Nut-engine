@@ -52,6 +52,23 @@ void chessboard::reset() noexcept
 			}
 		}
 	}
+	for (int i = 0; i < 15; ++i)
+	{
+		for (int ii = 0; ii < 15; ++ii)
+		{
+			for (int iii = 0; iii < 4; ++iii)
+			{
+				layer_3[i][ii][iii] = 0;
+			}
+		}
+	}
+	for (int i = 0; i < 3; ++i)
+	{
+		for (int ii = 0; ii < 20; ++ii)
+		{
+			layer_4[i][ii] = 0;
+		}
+	}
 }
 
 int chessboard::get(const int row, const int col) const noexcept

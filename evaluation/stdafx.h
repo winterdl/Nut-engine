@@ -26,4 +26,3 @@
 #include<algorithm>
 #include<array>
 #include"../chessboard/chessboard.h"
-#include<cassert>
