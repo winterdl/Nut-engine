@@ -17,66 +17,72 @@
 #include "stdafx.h"
 #include "evaluation.h"
 
-void evaluation::reset_point(chessboard &board, int row, int col) noexcept
+void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noexcept
 {
-	for (int i = 0; i < 3; ++i)
+	if (!pure)
 	{
-		for (int ii = 0; ii < 20; ++ii)
+		for (int i = 0; i < 3; ++i)
 		{
-			board.layer_4[i][ii] = 0;
-		}
-	}
-	if (row < 0 || col < 0 || row >= 15 || col >= 15)
-	{
-		for (int i = 0; i < 15; ++i)
-		{
-			for (int ii = 0; ii < 15; ++ii)
+			for (int ii = 0; ii < 20; ++ii)
 			{
-				board.layer_3[i][ii][0] = 0;
-				board.layer_3[i][ii][1] = 0;
-				board.layer_3[i][ii][2] = 0;
-				board.layer_3[i][ii][3] = 0;
+				board.layer_4[i][ii] = 0;
 			}
 		}
 	}
 	else
 	{
-		for (int ii = 0; ii < 15; ++ii)
+		if (row < 0 || col < 0 || row >= 15 || col >= 15)
 		{
-			board.layer_3[row][ii][0] = 0;
-		}
-		for (int ii = 0; ii < 15; ++ii)
-		{
-			board.layer_3[ii][col][1] = 0;
-		}
-		int x, y;
-		if (row < col)
-		{
-			y = col - row;
-			x = 0;
-		}
-		else
-		{
-			y = 0;
-			x = row - col;
-		}
-		for (; x < 15 && y < 15; ++x, ++y)
-		{
-			board.layer_3[x][y][2] = 0;
-		}
-		if (14 - row < col)
-		{
-			y = col - 14 + row;
-			x = 14;
+			for (int i = 0; i < 15; ++i)
+			{
+				for (int ii = 0; ii < 15; ++ii)
+				{
+					board.layer_3[i][ii][0] = 0;
+					board.layer_3[i][ii][1] = 0;
+					board.layer_3[i][ii][2] = 0;
+					board.layer_3[i][ii][3] = 0;
+				}
+			}
 		}
 		else
 		{
-			y = 0;
-			x = row + col;
-		}
-		for (; x >= 0 && y < 15; --x, ++y)
-		{
-			board.layer_3[x][y][3] = 0;
+			for (int ii = 0; ii < 15; ++ii)
+			{
+				board.layer_3[row][ii][0] = 0;
+			}
+			for (int ii = 0; ii < 15; ++ii)
+			{
+				board.layer_3[ii][col][1] = 0;
+			}
+			int x, y;
+			if (row < col)
+			{
+				y = col - row;
+				x = 0;
+			}
+			else
+			{
+				y = 0;
+				x = row - col;
+			}
+			for (; x < 15 && y < 15; ++x, ++y)
+			{
+				board.layer_3[x][y][2] = 0;
+			}
+			if (14 - row < col)
+			{
+				y = col - 14 + row;
+				x = 14;
+			}
+			else
+			{
+				y = 0;
+				x = row + col;
+			}
+			for (; x >= 0 && y < 15; --x, ++y)
+			{
+				board.layer_3[x][y][3] = 0;
+			}
 		}
 	}
 }
@@ -340,12 +346,12 @@ void evaluation::analysis_right(chessboard &board, int i, int j) noexcept
 
 int evaluation::__evaluate(chessboard &board, int turn, const int row, const int col, bool pure) noexcept
 {
-	reset_point(board, row, col);
-	evaluate_point(board, row, col);
-
+	reset_point(board, row, col, pure);
 	if (pure)
+	{
+		evaluate_point(board, row, col);
 		return 0;
-
+	}
 	for (int i = 0; i < 15; ++i)
 	{
 		for (int j = 0; j < 15; ++j)
