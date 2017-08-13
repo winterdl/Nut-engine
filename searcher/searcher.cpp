@@ -76,7 +76,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 	else if (depth <= 0)
 		return std::make_tuple(res, i, ii);
 	std::vector<std::tuple<int, int8_t, int8_t>> moves;
-	moves = smart_genmove(turn, ref(board), 2, depth);
+	moves = smart_genmove(turn, ref(board), 1, depth);
 	std::tuple<int, int, int> v = std::make_tuple(-0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
@@ -130,7 +130,7 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, 
 		return std::make_tuple(10000000 - ply, i, ii);
 	else if (depth <= 0)
 		return std::make_tuple(res, i, ii);
-	auto moves = smart_genmove(turn, ref(board), 2, depth);
+	auto moves = smart_genmove(turn, ref(board), 1, depth);
 	std::tuple<int, int, int> v = std::make_tuple(0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
