@@ -22,11 +22,11 @@ using namespace std;
 
 std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, chessboard board, int depth, int current) noexcept
 {
+	auto moves = board.genmove();
 	if (current <= 2)
-		return board.genmove();
+		return moves;
 	int alpha = -0x7fffffff, beta = 0x7fffffff;
 	std::vector<std::tuple<int, int8_t, int8_t>> ress;
-	auto moves = board.genmove();
 	std::tuple<int, int, int> v = std::make_tuple(-0x7fffffff, -1, -1);
 	for (auto&x : moves)
 	{
@@ -46,6 +46,9 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 		alpha = max(alpha, std::get<0>(v));
 	}
 	sort(ress.rbegin(), ress.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
+	const int maxnum = 16;
+	if (ress.size() > maxnum)
+		ress.resize(maxnum);
 	return ress;
 }
 
@@ -60,7 +63,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 {
 	bool changed = false;
 	std::chrono::time_point<std::chrono::steady_clock> timeout;
-	if (depth == 5)
+	if (depth == 7)
 		timeout = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeoutnum);
 	int nturn;
 	if (turn == 1)
@@ -82,7 +85,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 	{
 		board.put(ref(std::get<1>(x)), ref(std::get<2>(x)), ref(turn));
 		std::tuple<int, int8_t, int8_t> temp;
-		if (depth == 5)
+		if (depth == 7)
 		{
 			if (changed == false)
 			{

@@ -51,7 +51,7 @@ public:
 	}
 	auto Putcomputer(int turn, int timeout)
 	{
-		std::tuple<int, int8_t, int8_t> y = searchman.alpha_beta_search(turn, std::ref(board), 5, timeout);
+		std::tuple<int, int8_t, int8_t> y = searchman.alpha_beta_search(turn, std::ref(board), 7, timeout);
 		return y;
 	}
 	bool Put(int row, int col, int turn)
