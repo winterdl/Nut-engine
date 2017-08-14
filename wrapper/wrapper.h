@@ -24,11 +24,16 @@
 #include"searcher.h"
 #include<memory>
 #include<iostream>
+#include<string>
 
 
 class WRAPPER_API Cwrapper {
 public:
 	Cwrapper(void);
+	std::string About()
+	{
+		return "Nutengine v0.3.4";
+	}
 	void Resetboard()
 	{
 		board.reset();

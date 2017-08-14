@@ -21,6 +21,7 @@ using namespace std;
 int main()
 {
 	Cwrapper wrapper;
+	cout << wrapper.About() << endl;
 	chrono::steady_clock clock;
 	int turn = 2;
 	auto start = clock.now();
