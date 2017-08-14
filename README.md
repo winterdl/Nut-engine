@@ -11,7 +11,9 @@ Nut-engine 是一个连珠（15*15五子棋）的AI引擎。
 ## Ability
 
 ### 中文
-+ 大致相当于Gomocup Freestyle组19名。
+
+**以Fastgame模式运行时（即最多5s/步）**
++ 大致相当于Gomocup Fastgame组15名。
 
 ## Features
 
