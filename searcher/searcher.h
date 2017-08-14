@@ -31,4 +31,6 @@ private:
 	std::tuple<int, int8_t, int8_t> max_value(int turn, chessboard board, long long alpha, long long beta, int depth, int i, int ii, int ply)noexcept;
 	std::tuple<int, int8_t, int8_t> min_value(int turn, chessboard board, long long alpha, long long beta, int depth, int i, int ii, int ply)noexcept;
 	int timeoutnum = 30000;
+	std::chrono::steady_clock clock;
+	std::chrono::time_point<std::chrono::steady_clock> start;
 };

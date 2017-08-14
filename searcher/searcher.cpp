@@ -19,7 +19,6 @@
 #include"chessboard.h"
 using namespace std;
 
-
 std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, chessboard board, int depth, int current) noexcept
 {
 	auto moves = board.genmove();
@@ -145,6 +144,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int turn, chessboard board, int depth, int timeout)noexcept
 {
 	timeoutnum = timeout;
+	start = clock.now();
 	evaluator.evaluate(ref(board), turn, -1, -1, true);
 	return max_value(turn, ref(board), -0x7fffffff, 0x7fffffff, depth, -1, -1, 0);
 }
@@ -208,6 +208,8 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 		if (std::get<0>(v) >= beta)
 			return v;
 		alpha = max(alpha, std::get<0>(v));
+		if (chrono::duration_cast<chrono::milliseconds>(clock.now() - start).count() >= timeoutnum)
+			break;
 	}
 	return v;
 }
@@ -245,6 +247,8 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, 
 		if (std::get<0>(v) <= alpha)
 			return v;
 		beta = min(beta, std::get<0>(v));
+		if (chrono::duration_cast<chrono::milliseconds>(clock.now() - start).count() >= timeoutnum)
+			break;
 	}
 	return v;
 }

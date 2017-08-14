@@ -19,13 +19,17 @@
 #include "wrapper.h"
 #include <windows.h>
 
-const char *infotext = "name=\"Gomoku AI\", author=\"Chijun Sima\", version=\"0.3.0\", country=\"China\", www=\"https://github.com/NutshellySima\"";
+const char *infotext = "name=\"Gomoku AI\", author=\"Chijun Sima\", version=\"0.3.4\", country=\"China\", www=\"https://github.com/NutshellySima/Nut-engine\"";
 
 Cwrapper AI;
 
 /* create the board and call pipeOut("OK"); or pipeOut("ERROR Maximal board size is .."); */
 void brain_init()
 {
+	pipeOut("MESSAGE AI: Nutengine");
+	pipeOut("MESSAGE Copyright (c) 2017 Chijun Sima");
+	pipeOut("MESSAGE Licensed under the Apache License 2.0.");
+	pipeOut("MESSAGE https://github.com/NutshellySima/Nut-engine");
 	if (width != 15 || height != 15)
 	{
 		pipeOut("ERROR Supported board size is 15");
@@ -99,7 +103,7 @@ void brain_turn()
 	std::tuple<int, int8_t, int8_t>putter = AI.Putcomputer(2, info_timeout_turn);
 	x = std::get<1>(putter);
 	y = std::get<2>(putter);
-	pipeOut("MESSAGE %c%c: %d", static_cast<char>(x + 'A'), static_cast<char>(y + 'A'), std::get<0>(putter));
+	pipeOut("MESSAGE Point: %c%c Evaluate: %d", static_cast<char>(x + 'A'), static_cast<char>(y + 'A'), std::get<0>(putter));
 	do_mymove(x, y);
 }
 
