@@ -72,14 +72,15 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 	else
 		nturn = 1;
 	int res = evaluator.evaluate(ref(board), turn, i, ii, true);
-	int checker = board.checkpoint(i, ii);
-	if (checker == turn)
+	res = evaluator.evaluate(ref(board), turn, i, ii, false);
+	//int checker = board.checkpoint(i, ii);
+	if (res == 100000)
 		return std::make_tuple(10000000 - ply, i, ii);
-	else if (checker == nturn)
+	else if (res == -100000)
 		return std::make_tuple(0 - 10000000 + ply, i, ii);
 	else if (depth <= 0)
 	{
-		res = evaluator.evaluate(ref(board), turn, i, ii, false);
+		//res = evaluator.evaluate(ref(board), turn, i, ii, false);
 		return std::make_tuple(res, i, ii);
 	}
 	std::vector<std::tuple<int, int8_t, int8_t>> moves;
@@ -130,14 +131,15 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, 
 	else
 		nturn = 1;
 	int res = evaluator.evaluate(ref(board), turn, i, ii, true);
-	int checker = board.checkpoint(i, ii);
-	if (checker == turn)
+	res = 0 - evaluator.evaluate(ref(board), turn, i, ii, false);
+	//int checker = board.checkpoint(i, ii);
+	if (res == -100000)
 		return std::make_tuple(0 - 10000000 + ply, i, ii);
-	else if (checker == nturn)
+	else if (res == 100000)
 		return std::make_tuple(10000000 - ply, i, ii);
 	else if (depth <= 0)
 	{
-		res = 0 - evaluator.evaluate(ref(board), turn, i, ii, false);
+		//res = 0 - evaluator.evaluate(ref(board), turn, i, ii, false);
 		return std::make_tuple(res, i, ii);
 	}
 	auto moves = smart_genmove(turn, ref(board), 1, depth);

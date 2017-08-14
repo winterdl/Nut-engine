@@ -531,6 +531,16 @@ int evaluation::evaluate(chessboard &board, const int turn, const int row, const
 	if (pure)
 		return 0;
 	const int stone = nturn[turn];
+	if (score < -9995)
+	{
+		score = -100000;
+		return score;
+	}
+	if (score > 9995)
+	{
+		score = 100000;
+		return score;
+	}
 	if (abs(score) > 9000)
 	{
 		const int x = sign(score);
