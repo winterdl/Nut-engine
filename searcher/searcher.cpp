@@ -25,9 +25,9 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 	auto moves = board.genmove();
 	if (current <= 2)
 		return moves;
-	int alpha = -0x7fffffff, beta = 0x7fffffff;
+	const int alpha = -0x7fffffff, beta = 0x7fffffff;
 	std::vector<std::tuple<int, int8_t, int8_t>> ress;
-	std::tuple<int, int, int> v = std::make_tuple(-0x7fffffff, -1, -1);
+	bool check = false;
 	for (auto&x : moves)
 	{
 		board.put(ref(std::get<1>(x)), ref(std::get<2>(x)), ref(turn));
@@ -38,12 +38,12 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 			nturn = 1;
 		auto temp = min_value(nturn, ref(board), alpha, beta, depth - 1, std::get<1>(x), std::get<2>(x), 0);
 		auto com = make_tuple(std::get<0>(temp), std::get<1>(x), std::get<2>(x));
-		if (std::get<0>(v) < std::get<0>(com))
-			v = com;
-		ress.push_back(com);
+		if (!check&&std::get<0>(temp) > 0)
+			check = true;
+		if (!(check&&std::get<0>(temp) < -9900))
+			ress.push_back(com);
 		board.undo(ref(std::get<1>(x)), ref(std::get<2>(x)));
 		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
-		alpha = max(alpha, std::get<0>(v));
 	}
 	sort(ress.rbegin(), ress.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
 	const int maxnum = 16;
