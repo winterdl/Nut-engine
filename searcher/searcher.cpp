@@ -27,6 +27,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 		return moves;
 	const int alpha = -0x7fffffff, beta = 0x7fffffff;
 	std::vector<std::tuple<int, int8_t, int8_t>> ress;
+	ress.reserve(1 + moves.size());
 	bool check = false;
 	for (auto&x : moves)
 	{
@@ -41,7 +42,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 		if (!check&&std::get<0>(temp) > 0)
 			check = true;
 		if (!(check&&std::get<0>(temp) < -9900))
-			ress.push_back(com);
+			ress.emplace_back(com);
 		board.undo(ref(std::get<1>(x)), ref(std::get<2>(x)));
 		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
 	}
