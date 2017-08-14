@@ -32,6 +32,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 	bool check1 = false; // Searched normal results.
 	bool check2 = false; // Searched very good result.
 	bool check3 = false; // Searched ultra good result.
+	bool check4 = false; // Win signal.
 	for (auto&x : moves)
 	{
 		board.put(ref(std::get<1>(x)), ref(std::get<2>(x)), ref(turn));
@@ -48,6 +49,8 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 			check2 = true;
 		if (!check3&&std::get<0>(temp) >= 9970)
 			check3 = true;
+		if (!check4&&std::get<0>(temp) >= 50000)
+			check4 = true;
 		if (check1&&std::get<0>(temp) <= -2000)
 		{
 			;
@@ -60,14 +63,32 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 		{
 			;
 		}
+		else if (check4&&std::get<0>(temp) <= 15000)
+		{
+			;
+		}
 		else
 			ress.emplace_back(com);
 		board.undo(ref(std::get<1>(x)), ref(std::get<2>(x)));
 		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
 	}
-	if (check1 || check2|| check3)
+	if (check1 || check2|| check3||check4)
 	{
-		if (check3)
+		if (check4)
+		{
+			for (auto &xxx : ress)
+			{
+				if (std::get<0>(xxx) >= 5000)
+					realretval.emplace_back(xxx);
+			}
+			sort(realretval.rbegin(), realretval.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
+			const int maxnum = 16;
+			size_t sizer = realretval.size();
+			if (sizer > maxnum)
+				realretval.resize(maxnum);
+			return realretval;
+		}
+		else if (check3)
 		{
 			for (auto &xxx : ress)
 			{
