@@ -27,10 +27,11 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 		return moves;
 	const int alpha = -0x7fffffff, beta = 0x7fffffff;
 	std::vector<std::tuple<int, int8_t, int8_t>> ress;
-	//decltype(ress) realretval;
+	decltype(ress) realretval;
 	ress.reserve(1 + moves.size());
 	bool check1 = false; // Searched normal results.
 	bool check2 = false; // Searched very good result.
+	bool check3 = false; // Searched ultra good result.
 	for (auto&x : moves)
 	{
 		board.put(ref(std::get<1>(x)), ref(std::get<2>(x)), ref(turn));
@@ -41,15 +42,21 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 			nturn = 1;
 		auto temp = min_value(nturn, ref(board), alpha, beta, depth - 1, std::get<1>(x), std::get<2>(x), 0);
 		auto com = make_tuple(std::get<0>(temp), std::get<1>(x), std::get<2>(x));
-		if (!check1&&std::get<0>(temp) > 0)
+		if (!check1&&std::get<0>(temp) >= 0)
 			check1 = true;
-		if (!check2&&std::get<0>(temp) > 9900)
+		if (!check2&&std::get<0>(temp) >= 9000)
 			check2 = true;
-		if (check1&&std::get<0>(temp) < -9900)
+		if (!check3&&std::get<0>(temp) >= 9970)
+			check3 = true;
+		if (check1&&std::get<0>(temp) <= -2000)
 		{
 			;
 		}
-		else if (check2&&std::get<0>(temp) < 0)
+		else if (check2&&std::get<0>(temp) < 2000)
+		{
+			;
+		}
+		else if (check3&&std::get<0>(temp) <= 9900)
 		{
 			;
 		}
@@ -58,46 +65,60 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 		board.undo(ref(std::get<1>(x)), ref(std::get<2>(x)));
 		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
 	}
-	//if (check1 || check2)
-	//{
-	//	if (check2)
-	//	{
-	//		for (auto &xxx : ress)
-	//		{
-	//			if (std::get<0>(xxx) > 9900)
-	//				realretval.emplace_back(xxx);
-	//		}
-	//		sort(realretval.rbegin(), realretval.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
-	//		const int maxnum = 16;
-	//		size_t sizer = realretval.size();
-	//		if (sizer > maxnum)
-	//			realretval.resize(maxnum);
-	//		return realretval;
-	//	}
-	//	else// check1
-	//	{
-	//		for (auto &xxx : ress)
-	//		{
-	//			if (std::get<0>(xxx) > 0)
-	//				realretval.emplace_back(xxx);
-	//		}
-	//		sort(realretval.rbegin(), realretval.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
-	//		const int maxnum = 16;
-	//		size_t sizer = realretval.size();
-	//		if (sizer > maxnum)
-	//			realretval.resize(maxnum);
-	//		return realretval;
-	//	}
-	//}
-	//else
-	//{
-	sort(ress.rbegin(), ress.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
-	const int maxnum = 16;
-	size_t sizer = ress.size();
-	if (sizer > maxnum)
-		ress.resize(maxnum);
-	return ress;
-	//}
+	if (check1 || check2|| check3)
+	{
+		if (check3)
+		{
+			for (auto &xxx : ress)
+			{
+				if (std::get<0>(xxx) > 9900)
+					realretval.emplace_back(xxx);
+			}
+			sort(realretval.rbegin(), realretval.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
+			const int maxnum = 16;
+			size_t sizer = realretval.size();
+			if (sizer > maxnum)
+				realretval.resize(maxnum);
+			return realretval;
+		}
+		else if (check2)
+		{
+			for (auto &xxx : ress)
+			{
+				if (std::get<0>(xxx) >= 2000)
+					realretval.emplace_back(xxx);
+			}
+			sort(realretval.rbegin(), realretval.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
+			const int maxnum = 16;
+			size_t sizer = realretval.size();
+			if (sizer > maxnum)
+				realretval.resize(maxnum);
+			return realretval;
+		}
+		else// check1
+		{
+			for (auto &xxx : ress)
+			{
+				if (std::get<0>(xxx) > -2000)
+					realretval.emplace_back(xxx);
+			}
+			sort(realretval.rbegin(), realretval.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
+			const int maxnum = 16;
+			size_t sizer = realretval.size();
+			if (sizer > maxnum)
+				realretval.resize(maxnum);
+			return realretval;
+		}
+	}
+	else
+	{
+		sort(ress.rbegin(), ress.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
+		const int maxnum = 16;
+		size_t sizer = ress.size();
+		if (sizer > maxnum)
+			ress.resize(maxnum);
+		return ress;
+	}
 }
 
 std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int turn, chessboard board, int depth, int timeout)noexcept
