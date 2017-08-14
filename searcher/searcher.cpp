@@ -78,7 +78,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 		{
 			for (auto &xxx : ress)
 			{
-				if (std::get<0>(xxx) >= 5000)
+				if (std::get<0>(xxx) >= 15000)
 					realretval.emplace_back(xxx);
 			}
 			sort(realretval.rbegin(), realretval.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
