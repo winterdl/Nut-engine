@@ -5,7 +5,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -103,7 +103,7 @@ void brain_turn()
 	std::tuple<int, int8_t, int8_t>putter = AI.Putcomputer(2, info_timeout_turn);
 	x = std::get<1>(putter);
 	y = std::get<2>(putter);
-	pipeOut("MESSAGE Point: %c%c Evaluate: %d", static_cast<char>(x + 'A'), static_cast<char>(y + 'A'), std::get<0>(putter));
+	pipeOut("MESSAGE Point: %c%c - %d %d Evaluate: %d", static_cast<char>(x + 'A'), static_cast<char>(y + 'A'), x, y, std::get<0>(putter));
 	do_mymove(x, y);
 }
 

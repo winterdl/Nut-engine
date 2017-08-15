@@ -32,7 +32,7 @@ public:
 	Cwrapper(void);
 	std::string About()
 	{
-		return "Nutengine v0.3.4";
+		return "Nutengine v0.3.5 RC";
 	}
 	void Resetboard()
 	{
