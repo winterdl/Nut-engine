@@ -188,9 +188,9 @@ std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int8_t turn, chessbo
 std::tuple<int, int8_t, int8_t> searcher::max_value(int8_t turn, chessboard& board, int alpha, int beta, int8_t depth, int8_t i, int8_t ii, int8_t ply)noexcept
 {
 	bool changed = false;
-	std::chrono::time_point<std::chrono::steady_clock> timeout;
-	if (depth == 7)
-		timeout = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeoutnum);
+	/*std::chrono::time_point<std::chrono::steady_clock> timeout;
+	if (depth == 8)
+		timeout = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeoutnum);*/
 	int nturn;
 	if (turn == 1)
 		nturn = 2;
