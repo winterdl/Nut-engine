@@ -52,11 +52,11 @@ void chessboard::reset() noexcept
 			}
 		}
 	}
-	for (int i = 0; i < 15; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
 		for (int ii = 0; ii < 15; ++ii)
 		{
-			for (int iii = 0; iii < 4; ++iii)
+			for (int iii = 0; iii < 15; ++iii)
 			{
 				layer_3[i][ii][iii] = 0;
 			}

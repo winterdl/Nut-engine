@@ -27,10 +27,10 @@ void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noe
 			{
 				for (int ii = 0; ii < 15; ++ii)
 				{
-					board.layer_3[i][ii][0] = 0;
-					board.layer_3[i][ii][1] = 0;
-					board.layer_3[i][ii][2] = 0;
-					board.layer_3[i][ii][3] = 0;
+					board.layer_3[0][i][ii] = 0;
+					board.layer_3[1][i][ii] = 0;
+					board.layer_3[2][i][ii] = 0;
+					board.layer_3[3][i][ii] = 0;
 				}
 			}
 		}
@@ -38,8 +38,8 @@ void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noe
 		{
 			for (int ii = 0; ii < 15; ++ii)
 			{
-				board.layer_3[row][ii][0] = 0;
-				board.layer_3[ii][col][1] = 0;
+				board.layer_3[0][row][ii] = 0;
+				board.layer_3[1][ii][col] = 0;
 			}
 			int x, y;
 			if (row < col)
@@ -54,7 +54,7 @@ void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noe
 			}
 			for (; x < 15 && y < 15; ++x, ++y)
 			{
-				board.layer_3[x][y][2] = 0;
+				board.layer_3[2][x][y] = 0;
 			}
 			if (14 - row < col)
 			{
@@ -68,7 +68,7 @@ void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noe
 			}
 			for (; x >= 0 && y < 15; --x, ++y)
 			{
-				board.layer_3[x][y][3] = 0;
+				board.layer_3[3][x][y] = 0;
 			}
 		}
 	}
@@ -378,7 +378,7 @@ void evaluation::analysis_horizon(chessboard &board, int i, int j) noexcept
 	for (int copy = 0; copy < flag; ++copy)
 	{
 		x = copy_place[copy];
-		board.layer_3[i][x][0] = result[x];
+		board.layer_3[0][i][x] = result[x];
 	}
 }
 
@@ -389,7 +389,7 @@ void evaluation::analysis_vertical(chessboard &board, int i, int j) noexcept
 	for (int copy = 0; copy < flag; ++copy)
 	{
 		x = copy_place[copy];
-		board.layer_3[x][j][1] = result[x];
+		board.layer_3[1][x][j] = result[x];
 	}
 }
 
@@ -412,7 +412,7 @@ void evaluation::analysis_left(chessboard &board, int i, int j) noexcept
 	for (int copy = 0; copy < flag; ++copy)
 	{
 		s = copy_place[copy];
-		board.layer_3[y + s][x + s][2] = result[s];
+		board.layer_3[2][y + s][x + s] = result[s];
 	}
 }
 
@@ -435,7 +435,7 @@ void evaluation::analysis_right(chessboard &board, int i, int j) noexcept
 	for (int copy = 0; copy < flag; ++copy)
 	{
 		s = copy_place[copy];
-		board.layer_3[y - s][x + s][3] = result[s];
+		board.layer_3[3][y - s][x + s] = result[s];
 	}
 }
 
@@ -450,16 +450,16 @@ int evaluation::__evaluate(chessboard &board, int turn, const int row, const int
 	for (int i = 0; i < board.number; ++i)
 	{
 		auto temp = board.layer_5[i];
-		int ch1 = board.layer_3[temp.first][temp.second][0];
+		int ch1 = board.layer_3[0][temp.first][temp.second];
 		if (ch1 >= STWO && ch1 <= FIVE)
 			++board.layer_4[board.board[temp.first][temp.second]][ch1];
-		int ch2 = board.layer_3[temp.first][temp.second][1];
+		int ch2 = board.layer_3[1][temp.first][temp.second];
 		if (ch2 >= STWO && ch2 <= FIVE)
 			++board.layer_4[board.board[temp.first][temp.second]][ch2];
-		int ch3 = board.layer_3[temp.first][temp.second][2];
+		int ch3 = board.layer_3[2][temp.first][temp.second];
 		if (ch3 >= STWO && ch3 <= FIVE)
 			++board.layer_4[board.board[temp.first][temp.second]][ch3];
-		int ch4 = board.layer_3[temp.first][temp.second][3];
+		int ch4 = board.layer_3[3][temp.first][temp.second];
 		if (ch4 >= STWO && ch4 <= FIVE)
 			++board.layer_4[board.board[temp.first][temp.second]][ch4];
 	}
@@ -559,13 +559,13 @@ void evaluation::evaluate_point(chessboard &board, int row, int col) noexcept
 		for (int num = 0; num < board.number; ++num)
 		{
 			auto temp = board.layer_5[num];
-			if (board.layer_3[temp.first][temp.second][0] == TODO)
+			if (board.layer_3[0][temp.first][temp.second] == TODO)
 				analysis_horizon(board, temp.first, temp.second);
-			if (board.layer_3[temp.first][temp.second][1] == TODO)
+			if (board.layer_3[1][temp.first][temp.second] == TODO)
 				analysis_vertical(board, temp.first, temp.second);
-			if (board.layer_3[temp.first][temp.second][2] == TODO)
+			if (board.layer_3[2][temp.first][temp.second] == TODO)
 				analysis_left(board, temp.first, temp.second);
-			if (board.layer_3[temp.first][temp.second][3] == TODO)
+			if (board.layer_3[3][temp.first][temp.second] == TODO)
 				analysis_right(board, temp.first, temp.second);
 		}
 	}
@@ -573,12 +573,12 @@ void evaluation::evaluate_point(chessboard &board, int row, int col) noexcept
 	{
 		for (int ii = 0; ii < 15; ++ii)
 		{
-			if (board.board[row][ii] != 0 && board.layer_3[row][ii][0] == TODO)
+			if (board.board[row][ii] != 0 && board.layer_3[0][row][ii] == TODO)
 				analysis_horizon(board, row, ii);
 		}
 		for (int ii = 0; ii < 15; ++ii)
 		{
-			if (board.board[ii][col] != 0 && board.layer_3[ii][col][1] == TODO)
+			if (board.board[ii][col] != 0 && board.layer_3[1][ii][col] == TODO)
 				analysis_vertical(board, ii, col);
 		}
 		int x, y;
@@ -594,7 +594,7 @@ void evaluation::evaluate_point(chessboard &board, int row, int col) noexcept
 		}
 		for (; x < 15 && y < 15; ++x, ++y)
 		{
-			if (board.board[x][y] != 0 && board.layer_3[x][y][2] == TODO)
+			if (board.board[x][y] != 0 && board.layer_3[2][x][y] == TODO)
 				analysis_left(board, x, y);
 		}
 		if (14 - row < col)
@@ -609,7 +609,7 @@ void evaluation::evaluate_point(chessboard &board, int row, int col) noexcept
 		}
 		for (; x >= 0 && y < 15; --x, ++y)
 		{
-			if (board.board[x][y] != 0 && board.layer_3[x][y][3] == TODO)
+			if (board.board[x][y] != 0 && board.layer_3[3][x][y] == TODO)
 				analysis_right(board, x, y);
 		}
 	}

@@ -33,7 +33,7 @@ public:
 protected:
 	std::array<std::array<int8_t, 15>, 15> board;
 	std::array<std::array<std::array<uint8_t, 15>, 29>, 4> layer_2;
-	std::array<std::array<std::array<uint8_t, 4>, 15>, 15> layer_3; //[row][col][direction]
+	std::array<std::array<std::array<uint8_t, 15>, 15>, 4> layer_3; //[direction][row][col]
 	std::array<std::array<uint8_t, 20>, 3> layer_4;
 	std::array<std::pair<uint8_t, uint8_t>, 225>layer_5;
 
