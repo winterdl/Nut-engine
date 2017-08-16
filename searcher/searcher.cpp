@@ -181,7 +181,7 @@ std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int turn, chessboard
 {
 	timeoutnum = timeout;
 	start = clock.now();
-	evaluator.evaluate(ref(board), turn, -1, -1, true);
+	//evaluator.evaluate(ref(board), turn, -1, -1, true);
 	return max_value(turn, ref(board), -0x7fffffff, 0x7fffffff, depth, -1, -1, 0);
 }
 
