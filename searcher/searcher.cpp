@@ -222,20 +222,19 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 				v = std::make_tuple(-0x7fffffff, std::get<1>(x), std::get<2>(x));
 				changed = true;
 			}
-			auto the_answer = std::async(std::launch::async, &searcher::min_value, this, nturn, ref(board), alpha, beta, depth - 1, std::get<1>(x), std::get<2>(x), ply + 1);
-			while (true)
-			{
-				if (the_answer.wait_until(timeout) == std::future_status::timeout)
-					return v;
-				else if (the_answer.wait_until(timeout) == std::future_status::ready)
-				{
-					temp = the_answer.get();
-					break;
-				}
-			}
+			//auto the_answer = std::async(std::launch::async, &searcher::min_value, this, nturn, ref(board), alpha, beta, depth - 1, std::get<1>(x), std::get<2>(x), ply + 1);
+			//while (true)
+			//{
+			//	if (the_answer.wait_until(timeout) == std::future_status::timeout)
+			//		return v;
+			//	else if (the_answer.wait_until(timeout) == std::future_status::ready)
+			//	{
+			//		temp = the_answer.get();
+			//		break;
+			//	}
+			//}
 		}
-		else
-			temp = min_value(nturn, ref(board), alpha, beta, depth - 1, std::get<1>(x), std::get<2>(x), ply + 1);
+		temp = min_value(nturn, ref(board), alpha, beta, depth - 1, std::get<1>(x), std::get<2>(x), ply + 1);
 		auto com = make_tuple(std::get<0>(temp), std::get<1>(x), std::get<2>(x));
 		if (std::get<0>(v) < std::get<0>(com))
 			v = com;
