@@ -20,6 +20,8 @@ using namespace std;
 
 int main()
 {
+	__int64 maxnum = 0, avgnum = 0;
+	size_t time = 0;
 	Cwrapper wrapper;
 	cout << wrapper.About() << endl;
 	chrono::steady_clock clock;
@@ -28,11 +30,12 @@ int main()
 	decltype(start) end = clock.now();
 	while (wrapper.Fullboard() == false)
 	{
+		++time;
 		if (turn == 1)
 			turn = 2;
 		else
 			turn = 1;
-		auto x = wrapper.Putcomputer(turn, 5000);
+		auto x = wrapper.Putcomputer(turn, 60000);
 		wrapper.Put(get<1>(x), get<2>(x), turn);
 		if (wrapper.Checkwin(get<1>(x), get<2>(x)))
 			break;
@@ -40,9 +43,13 @@ int main()
 		end = clock.now();
 		cout << turn << ": " << static_cast<char>(get<1>(x) + 'A') << " " << static_cast<char>('A' + get<2>(x)) << ": " << get<0>(x) <<
 			"   Duration: " << xx << " ms." << endl;
+		maxnum = max(maxnum, xx);
+		avgnum += xx;
 	}
 	end = clock.now();
 	cout << "Duration: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms." << endl;
+	cout << "Avg: " << static_cast<double>(avgnum) / time << endl;
+	cout << "Max: " << maxnum << endl;
 	return 0;
 }
 
