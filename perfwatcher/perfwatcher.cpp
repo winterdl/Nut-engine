@@ -48,8 +48,8 @@ int main()
 	}
 	end = clock.now();
 	cout << "Duration: " << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms." << endl;
-	cout << "Avg: " << static_cast<double>(avgnum) / time << endl;
-	cout << "Max: " << maxnum << endl;
+	cout << "Avg: " << static_cast<double>(avgnum) / time << " ms." << endl;
+	cout << "Max: " << maxnum << " ms." << endl;
 	return 0;
 }
 
