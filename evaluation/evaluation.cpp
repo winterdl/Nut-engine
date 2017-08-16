@@ -450,12 +450,18 @@ int evaluation::__evaluate(chessboard &board, int turn, const int row, const int
 	for (int i = 0; i < board.number; ++i)
 	{
 		auto temp = board.layer_5[i];
-		for (int k = 0; k < 4; ++k)
-		{
-			int ch = board.layer_3[temp.first][temp.second][k];
-			if (ch >= STWO && ch <= FIVE)
-				++board.layer_4[board.board[temp.first][temp.second]][ch];
-		}
+		int ch1 = board.layer_3[temp.first][temp.second][0];
+		if (ch1 >= STWO && ch1 <= FIVE)
+			++board.layer_4[board.board[temp.first][temp.second]][ch1];
+		int ch2 = board.layer_3[temp.first][temp.second][1];
+		if (ch2 >= STWO && ch2 <= FIVE)
+			++board.layer_4[board.board[temp.first][temp.second]][ch2];
+		int ch3 = board.layer_3[temp.first][temp.second][2];
+		if (ch3 >= STWO && ch3 <= FIVE)
+			++board.layer_4[board.board[temp.first][temp.second]][ch3];
+		int ch4 = board.layer_3[temp.first][temp.second][3];
+		if (ch4 >= STWO && ch4 <= FIVE)
+			++board.layer_4[board.board[temp.first][temp.second]][ch4];
 	}
 	if (board.layer_4[WHITE][SFOUR] >= 2)
 		++board.layer_4[WHITE][FOUR];
@@ -550,22 +556,17 @@ void evaluation::evaluate_point(chessboard &board, int row, int col) noexcept
 {
 	if (row < 0 || col < 0 || row >= 15 || col >= 15)
 	{
-		for (int i = 0; i < 15; ++i)
+		for (int num = 0; num < board.number; ++num)
 		{
-			for (int j = 0; j < 15; ++j)
-			{
-				if (board.board[i][j] != 0)
-				{
-					if (board.layer_3[i][j][0] == TODO)
-						analysis_horizon(board, i, j);
-					if (board.layer_3[i][j][1] == TODO)
-						analysis_vertical(board, i, j);
-					if (board.layer_3[i][j][2] == TODO)
-						analysis_left(board, i, j);
-					if (board.layer_3[i][j][3] == TODO)
-						analysis_right(board, i, j);
-				}
-			}
+			auto temp = board.layer_5[num];
+			if (board.layer_3[temp.first][temp.second][0] == TODO)
+				analysis_horizon(board, temp.first, temp.second);
+			if (board.layer_3[temp.first][temp.second][1] == TODO)
+				analysis_vertical(board, temp.first, temp.second);
+			if (board.layer_3[temp.first][temp.second][2] == TODO)
+				analysis_left(board, temp.first, temp.second);
+			if (board.layer_3[temp.first][temp.second][3] == TODO)
+				analysis_right(board, temp.first, temp.second);
 		}
 	}
 	else
