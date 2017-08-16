@@ -86,11 +86,18 @@ void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noe
 
 void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, const int pos) noexcept
 {
+	flag = 0;
 	//std::fill_n(result.begin(), num, TODO);
 	memset(result.data(), TODO, sizeof(uint8_t)*num);
 	if (num < 5)
 	{
-		std::fill_n(result.begin(), num, ANALYSED);
+		for (int i = 0; i < num; ++i)
+		{
+			result[i] = ANALYSED;
+			copy_place[flag] = i;
+			++flag;
+		}
+		//std::fill_n(result.begin(), num, ANALYSED);
 		return;
 	}
 	int8_t stone = line[pos];
@@ -125,15 +132,25 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 	if (right_range - left_range < 4)
 	{
 		for (int k = left_range; k <= right_range; ++k)
+		{
 			result[k] = ANALYSED;
+			copy_place[flag] = k;
+			++flag;
+		}
 		return;
 	}
 	for (int k = xl; k <= xr; ++k)
+	{
 		result[k] = ANALYSED;
+		copy_place[flag] = k;
+		++flag;
+	}
 	int srange = xr - xl;
 	if (srange >= 4)
 	{
 		result[pos] = FIVE;
+		copy_place[flag] = pos;
+		++flag;
 		return;
 	}
 	if (srange == 3)
@@ -149,12 +166,24 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 			if (line[xr + 1] == 0)
 			{
 				if (leftfour)
+				{
 					result[pos] = FOUR;
+					copy_place[flag] = pos;
+					++flag;
+				}
 				else
+				{
 					result[pos] = SFOUR;
+					copy_place[flag] = pos;
+					++flag;
+				}
 			}
 			else if (leftfour)
+			{
 				result[pos] = SFOUR;
+				copy_place[flag] = pos;
+				++flag;
+			}
 			return;
 		}
 	}
@@ -168,7 +197,11 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 				if (xl > 1 && line[xl - 2] == stone)
 				{
 					result[xl] = SFOUR;
+					copy_place[flag] = xl;
+					++flag;
 					result[xl - 2] = ANALYSED;
+					copy_place[flag] = xl - 2;
+					++flag;
 				}
 				else
 					left3 = true;
@@ -183,24 +216,44 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 				if (xr < num - 1 && line[xr + 2] == stone)
 				{
 					result[xr] = SFOUR;
+					copy_place[flag] = xr;
+					++flag;
 					result[xr + 2] = ANALYSED;
+					copy_place[flag] = xr + 2;
+					++flag;
 				}
 				else if (left3)
+				{
 					result[xr] = THREE;
+					copy_place[flag] = xr;
+					++flag;
+				}
 				else
+				{
 					result[xr] = STHREE;
+					copy_place[flag] = xr;
+					++flag;
+				}
 			}
 			else if (result[xl] == SFOUR)
 				return;
 			else if (left3)
+			{
 				result[pos] = STHREE;
+				copy_place[flag] = pos;
+				++flag;
+			}
 		}
 		else
 		{
 			if (result[xl] == SFOUR)
 				return;
 			if (left3)
+			{
 				result[pos] = STHREE;
+				copy_place[flag] = pos;
+				++flag;
+			}
 		}
 		return;
 	}
@@ -216,13 +269,23 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 					if (line[xl - 3] == stone)
 					{
 						result[xl - 3] = ANALYSED;
+						copy_place[flag] = xl - 3;
+						++flag;
 						result[xl - 2] = ANALYSED;
+						copy_place[flag] = xl - 2;
+						++flag;
 						result[xl] = SFOUR;
+						copy_place[flag] = xl;
+						++flag;
 					}
 					else if (line[xl - 3] == 0)
 					{
 						result[xl - 2] = ANALYSED;
+						copy_place[flag] = xl - 2;
+						++flag;
 						result[xl] = STHREE;
+						copy_place[flag] = xl;
+						++flag;
 					}
 				}
 				else
@@ -238,16 +301,32 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 					if (line[xr + 3] == stone)
 					{
 						result[xr + 3] = ANALYSED;
+						copy_place[flag] = xr + 3;
+						++flag;
 						result[xr + 2] = ANALYSED;
+						copy_place[flag] = xr + 2;
+						++flag;
 						result[xr] = SFOUR;
+						copy_place[flag] = xr;
+						++flag;
 					}
 					else if (line[xr + 3] == 0)
 					{
 						result[xr + 2] = ANALYSED;
+						copy_place[flag] = xr + 2;
+						++flag;
 						if (left2)
+						{
 							result[xr] = THREE;
+							copy_place[flag] = xr;
+							++flag;
+						}
 						else
+						{
 							result[xr] = STHREE;
+							copy_place[flag] = xr;
+							++flag;
+						}
 					}
 				}
 				else
@@ -257,12 +336,22 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 					if (result[xl] == STHREE)
 					{
 						result[xl] = THREE;
+						copy_place[flag] = xl;
+						++flag;
 						return;
 					}
 					if (left2)
+					{
 						result[pos] = TWO;
+						copy_place[flag] = pos;
+						++flag;
+					}
 					else
+					{
 						result[pos] = STWO;
+						copy_place[flag] = pos;
+						++flag;
+					}
 				}
 			}
 			else
@@ -270,7 +359,11 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 				if (result[xl] == SFOUR)
 					return;
 				if (left2)
+				{
 					result[pos] = STWO;
+					copy_place[flag] = pos;
+					++flag;
+				}
 			}
 		}
 		return;
@@ -281,20 +374,22 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 void evaluation::analysis_horizon(chessboard &board, int i, int j) noexcept
 {
 	analyse_line(std::ref(board.layer_2[0][i]), 15, j);
-	for (int x = 0; x < 15; ++x)
+	size_t x;
+	for (int copy = 0; copy < flag; ++copy)
 	{
-		if (result[x] != TODO)
-			board.layer_3[i][x][0] = result[x];
+		x = copy_place[copy];
+		board.layer_3[i][x][0] = result[x];
 	}
 }
 
 void evaluation::analysis_vertical(chessboard &board, int i, int j) noexcept
 {
 	analyse_line(std::ref(board.layer_2[1][j]), 15, i);
-	for (int x = 0; x < 15; ++x)
+	size_t x;
+	for (int copy = 0; copy < flag; ++copy)
 	{
-		if (result[x] != TODO)
-			board.layer_3[x][j][1] = result[x];
+		x = copy_place[copy];
+		board.layer_3[x][j][1] = result[x];
 	}
 }
 
@@ -313,10 +408,11 @@ void evaluation::analysis_left(chessboard &board, int i, int j) noexcept
 	}
 	k = 15 - abs(i - j);
 	analyse_line(board.layer_2[2][i - j + 14], k, j - x);
-	for (int s = 0; s < k; ++s)
+	size_t s;
+	for (int copy = 0; copy < flag; ++copy)
 	{
-		if (result[s] != TODO)
-			board.layer_3[y + s][x + s][2] = result[s];
+		s = copy_place[copy];
+		board.layer_3[y + s][x + s][2] = result[s];
 	}
 }
 
@@ -335,10 +431,11 @@ void evaluation::analysis_right(chessboard &board, int i, int j) noexcept
 	}
 	k = 15 - abs(i + j - 14);
 	analyse_line(board.layer_2[3][i + j], k, j - x);
-	for (int s = 0; s < k; ++s)
+	size_t s;
+	for (int copy = 0; copy < flag; ++copy)
 	{
-		if (result[s] != TODO)
-			board.layer_3[y - s][x + s][3] = result[s];
+		s = copy_place[copy];
+		board.layer_3[y - s][x + s][3] = result[s];
 	}
 }
 
