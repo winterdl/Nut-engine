@@ -24,12 +24,12 @@
 class DllExport searcher
 {
 public:
-	std::tuple<int, int8_t, int8_t> alpha_beta_search(int turn, chessboard board, int depth, int timeout)noexcept;
+	std::tuple<int, int8_t, int8_t> alpha_beta_search(int8_t turn, chessboard& board, int8_t depth, int timeout)noexcept;
 private:
 	evaluation evaluator;
-	std::vector<std::tuple<int, int8_t, int8_t>> smart_genmove(int turn, chessboard, int depth, int current)noexcept;
-	std::tuple<int, int8_t, int8_t> max_value(int turn, chessboard board, long long alpha, long long beta, int depth, int i, int ii, int ply)noexcept;
-	std::tuple<int, int8_t, int8_t> min_value(int turn, chessboard board, long long alpha, long long beta, int depth, int i, int ii, int ply)noexcept;
+	std::vector<std::tuple<int, int8_t, int8_t>> smart_genmove(int8_t turn, chessboard& board, int8_t depth, int8_t current)noexcept;
+	std::tuple<int, int8_t, int8_t> max_value(int8_t turn, chessboard& board, int alpha, int beta, int8_t depth, int8_t i, int8_t ii, int8_t ply)noexcept;
+	std::tuple<int, int8_t, int8_t> min_value(int8_t turn, chessboard& board, int alpha, int beta, int8_t depth, int8_t i, int8_t ii, int8_t ply)noexcept;
 	int timeoutnum = 30000;
 	std::chrono::steady_clock clock;
 	std::chrono::time_point<std::chrono::steady_clock> start;

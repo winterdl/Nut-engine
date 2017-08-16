@@ -19,7 +19,7 @@
 #include"chessboard.h"
 using namespace std;
 
-std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, chessboard board, int depth, int current) noexcept
+std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int8_t turn, chessboard& board, int8_t depth, int8_t current) noexcept
 {
 	int maxnum = 16;
 	auto moves = board.genmove();
@@ -177,7 +177,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int turn, c
 	}
 }
 
-std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int turn, chessboard board, int depth, int timeout)noexcept
+std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int8_t turn, chessboard& board, int8_t depth, int timeout)noexcept
 {
 	timeoutnum = timeout;
 	start = clock.now();
@@ -185,7 +185,7 @@ std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int turn, chessboard
 	return max_value(turn, ref(board), -0x7fffffff, 0x7fffffff, depth, -1, -1, 0);
 }
 
-std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, long long alpha, long long beta, int depth, int i, int ii, int ply)noexcept
+std::tuple<int, int8_t, int8_t> searcher::max_value(int8_t turn, chessboard& board, int alpha, int beta, int8_t depth, int8_t i, int8_t ii, int8_t ply)noexcept
 {
 	bool changed = false;
 	std::chrono::time_point<std::chrono::steady_clock> timeout;
@@ -249,7 +249,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int turn, chessboard board, 
 	return v;
 }
 
-std::tuple<int, int8_t, int8_t> searcher::min_value(int turn, chessboard board, long long alpha, long long beta, int depth, int i, int ii, int ply)noexcept
+std::tuple<int, int8_t, int8_t> searcher::min_value(int8_t turn, chessboard& board, int alpha, int beta, int8_t depth, int8_t i, int8_t ii, int8_t ply)noexcept
 {
 	int nturn;
 	if (turn == 1)
