@@ -5,7 +5,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,7 @@
 class DllExport chessboard
 {
 	friend class evaluation;
-  public:
+public:
 	chessboard() noexcept;
 	void reset() noexcept;
 	int get(const int row, const int col) const noexcept;
@@ -33,14 +33,15 @@ class DllExport chessboard
 protected:
 	std::array<std::array<int8_t, 15>, 15> board;
 	std::array<std::array<std::array<uint8_t, 15>, 29>, 4> layer_2;
-	std::array<std::array<std::array<int, 4>, 15>, 15> layer_3; //[row][col][direction]
-	std::array<std::array<int, 20>, 3> layer_4;
+	std::array<std::array<std::array<uint8_t, 4>, 15>, 15> layer_3; //[row][col][direction]
+	std::array<std::array<uint8_t, 20>, 3> layer_4;
+	std::array<std::pair<uint8_t, uint8_t>, 225>layer_5;
 
-  private:
+private:
 	int check() const noexcept;
 	void update_remotecell(const int row, const int col, const bool add) noexcept;
 	void update_layer_2(const int row, const int col, const bool add) noexcept;
 	std::array<std::array<uint8_t, 15>, 15> remote_cell;
-	unsigned int number;
-	std::array<std::array<int, 15>, 15> pos;
+	uint8_t number;
+	std::array<std::array<uint8_t, 15>, 15> pos;
 };

@@ -83,6 +83,7 @@ bool chessboard::put(const int row, const int col, const int x) noexcept
 		board[row][col] = x;
 		update_remotecell(row, col, true);
 		update_layer_2(row, col, true);
+		layer_5[number] = std::make_pair(row, col);
 		++number;
 		return true;
 	}

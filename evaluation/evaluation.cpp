@@ -39,9 +39,6 @@ void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noe
 			for (int ii = 0; ii < 15; ++ii)
 			{
 				board.layer_3[row][ii][0] = 0;
-			}
-			for (int ii = 0; ii < 15; ++ii)
-			{
 				board.layer_3[ii][col][1] = 0;
 			}
 			int x, y;
@@ -89,7 +86,8 @@ void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noe
 
 void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, const int pos) noexcept
 {
-	std::fill_n(result.begin(), num, TODO);
+	//std::fill_n(result.begin(), num, TODO);
+	memset(result.data(), TODO, sizeof(uint8_t)*num);
 	if (num < 5)
 	{
 		std::fill_n(result.begin(), num, ANALYSED);
@@ -352,20 +350,14 @@ int evaluation::__evaluate(chessboard &board, int turn, const int row, const int
 		evaluate_point(board, row, col);
 		return 0;
 	}
-	for (int i = 0; i < 15; ++i)
+	for (int i = 0; i < board.number; ++i)
 	{
-		for (int j = 0; j < 15; ++j)
+		auto temp = board.layer_5[i];
+		for (int k = 0; k < 4; ++k)
 		{
-			int stone = board.board[i][j];
-			if (stone != 0)
-			{
-				for (int k = 0; k < 4; ++k)
-				{
-					int ch = board.layer_3[i][j][k];
-					if (ch >= STWO && ch <= FIVE)
-						++board.layer_4[stone][ch];
-				}
-			}
+			int ch = board.layer_3[temp.first][temp.second][k];
+			if (ch >= STWO && ch <= FIVE)
+				++board.layer_4[board.board[temp.first][temp.second]][ch];
 		}
 	}
 	if (board.layer_4[WHITE][SFOUR] >= 2)
