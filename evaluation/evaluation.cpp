@@ -88,7 +88,7 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 {
 	flag = 0;
 	//std::fill_n(result.begin(), num, TODO);
-	memset(result.data(), TODO, sizeof(uint8_t)*num);
+	//memset(result.data(), TODO, sizeof(uint8_t)*num);
 	if (num < 5)
 	{
 		for (int i = 0; i < num; ++i)
