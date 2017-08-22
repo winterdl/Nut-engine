@@ -177,7 +177,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int8_t turn
 	}
 }
 
-std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int8_t turn, chessboard& board, int8_t depth, int timeout)noexcept
+std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int8_t turn, chessboard board, int8_t depth, int timeout)noexcept
 {
 	timeoutnum = timeout;
 	start = clock.now();

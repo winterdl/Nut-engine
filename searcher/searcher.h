@@ -24,7 +24,7 @@
 class DllExport searcher
 {
 public:
-	std::tuple<int, int8_t, int8_t> alpha_beta_search(int8_t turn, chessboard& board, int8_t depth, int timeout)noexcept;
+	std::tuple<int, int8_t, int8_t> alpha_beta_search(int8_t turn, chessboard board, int8_t depth, int timeout)noexcept;
 private:
 	evaluation evaluator;
 	std::vector<std::tuple<int, int8_t, int8_t>> smart_genmove(int8_t turn, chessboard& board, int8_t depth, int8_t current)noexcept;

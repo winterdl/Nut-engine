@@ -58,9 +58,9 @@ public:
 	{
 		std::tuple<int, int8_t, int8_t> y;
 		if (timeout >= 4000)
-			y = searchman.alpha_beta_search(turn, std::ref(board), 7, timeout);
+			y = searchman.alpha_beta_search(turn, board, 7, timeout);
 		else
-			y = searchman.alpha_beta_search(turn, std::ref(board), 6, timeout);
+			y = searchman.alpha_beta_search(turn, board, 6, timeout);
 		return y;
 	}
 	bool Put(int row, int col, int turn)
