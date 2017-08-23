@@ -52,5 +52,5 @@ private:
 	const std::array<uint8_t, 3> nturn = { 0, 2, 1 };
 	std::array<uint8_t, 15> result;
 	uint8_t flag;
-	std::array<uint8_t, 15>copy_place;
+	std::array<uint8_t, 30>copy_place;
 };
