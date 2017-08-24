@@ -19,7 +19,7 @@
 #include "wrapper.h"
 #include <windows.h>
 
-const char *infotext = "name=\"Gomoku AI\", author=\"Chijun Sima\", version=\"0.3.7\", country=\"China\", www=\"https://github.com/NutshellySima/Nut-engine\"";
+const char *infotext = "name=\"Gomoku AI\", author=\"Chijun Sima\", version=\"0.3.8\", country=\"China\", www=\"https://github.com/NutshellySima/Nut-engine\"";
 
 Cwrapper AI;
 
