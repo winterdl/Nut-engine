@@ -27,34 +27,34 @@
 #include<string>
 
 
-class WRAPPER_API Cwrapper {
+class Cwrapper {
 public:
-	Cwrapper(void);
-	std::string About()
+	WRAPPER_API Cwrapper(void);
+	WRAPPER_API std::string About()
 	{
 		return "Nutengine v0.3.7";
 	}
-	void Resetboard()
+	WRAPPER_API void Resetboard()
 	{
 		board.reset();
 	}
-	bool Fullboard()
+	WRAPPER_API bool Fullboard()
 	{
 		return board.Fullboard();
 	}
-	auto Getboard()
+	WRAPPER_API auto Getboard()
 	{
 		return board;
 	}
-	bool Undoboard(int row, int col)
+	WRAPPER_API bool Undoboard(int row, int col)
 	{
 		return board.undo(row, col);
 	}
-	int Checkwin(const int row, const int col)
+	WRAPPER_API int Checkwin(const int row, const int col)
 	{
 		return board.checkpoint(row, col);
 	}
-	auto Putcomputer(int turn, int timeout)
+	WRAPPER_API auto Putcomputer(int turn, int timeout)
 	{
 		std::tuple<int, int8_t, int8_t> y;
 		if (timeout >= 4000)
@@ -63,11 +63,11 @@ public:
 			y = searchman.alpha_beta_search(turn, board, 6, timeout);
 		return y;
 	}
-	bool Put(int row, int col, int turn)
+	WRAPPER_API bool Put(int row, int col, int turn)
 	{
 		return board.put(row, col, turn);
 	}
-	bool IsFree(int8_t i, int8_t ii)
+	WRAPPER_API bool IsFree(int8_t i, int8_t ii)
 	{
 		return board.get(i, ii) == 0;
 	}

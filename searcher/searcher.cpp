@@ -173,8 +173,8 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(int8_t turn
 		size_t sizer = ress.size();
 		if (sizer > maxnum)
 			ress.resize(maxnum);
-		return ress;
 	}
+	return ress;
 }
 
 std::tuple<int, int8_t, int8_t> searcher::alpha_beta_search(int8_t turn, chessboard board, int8_t depth, int timeout)noexcept
