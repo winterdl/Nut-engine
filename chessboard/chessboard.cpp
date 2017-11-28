@@ -438,7 +438,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> chessboard::genmove() const noexcep
 			}
 		}
 	}
-	if (moves.empty())
+	if (0 == number)
 		moves.push_back(std::make_tuple(3, 7, 7));
 	std::sort(moves.rbegin(), moves.rend());
 	return moves;
