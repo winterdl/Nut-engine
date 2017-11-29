@@ -32,7 +32,7 @@ public:
 	WRAPPER_API Cwrapper(void);
 	WRAPPER_API std::string About()
 	{
-		return "Nutengine v0.3.8";
+		return "Nutengine v0.3.9";
 	}
 	WRAPPER_API void Resetboard()
 	{
