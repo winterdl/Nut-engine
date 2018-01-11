@@ -174,9 +174,6 @@
     <ProjectReference Include="..\chessboard\chessboard.vcxproj">
       <Project>{b25d389c-f048-4b09-83af-a0b6fbc47706}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\evaluation\evaluation.vcxproj">
-      <Project>{14928860-6cc4-4383-b52e-9f9be6a2ff42}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\searcher\searcher.vcxproj">
       <Project>{d5879344-4cdf-44f6-a57d-7bcd233c27ca}</Project>
     </ProjectReference>
