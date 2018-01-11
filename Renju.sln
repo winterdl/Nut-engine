@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chessboard", "chessboard\chessboard.vcxproj", "{B25D389C-F048-4B09-83AF-A0B6FBC47706}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "evaluation", "evaluation\evaluation.vcxproj", "{14928860-6CC4-4383-B52E-9F9BE6A2FF42}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "searcher", "searcher\searcher.vcxproj", "{D5879344-4CDF-44F6-A57D-7BCD233C27CA}"
 EndProject
@@ -16,9 +14,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "perfwatcher", "perfwatcher\perfwatcher.vcxproj", "{C5B70D0C-0909-46EF-ADC2-5AB4C37C57E5}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
@@ -34,14 +29,6 @@ Global
 		{B25D389C-F048-4B09-83AF-A0B6FBC47706}.Release|x64.Build.0 = Release|x64
 		{B25D389C-F048-4B09-83AF-A0B6FBC47706}.Release|x86.ActiveCfg = Release|Win32
 		{B25D389C-F048-4B09-83AF-A0B6FBC47706}.Release|x86.Build.0 = Release|Win32
-		{14928860-6CC4-4383-B52E-9F9BE6A2FF42}.Debug|x64.ActiveCfg = Debug|x64
-		{14928860-6CC4-4383-B52E-9F9BE6A2FF42}.Debug|x64.Build.0 = Debug|x64
-		{14928860-6CC4-4383-B52E-9F9BE6A2FF42}.Debug|x86.ActiveCfg = Debug|Win32
-		{14928860-6CC4-4383-B52E-9F9BE6A2FF42}.Debug|x86.Build.0 = Debug|Win32
-		{14928860-6CC4-4383-B52E-9F9BE6A2FF42}.Release|x64.ActiveCfg = Release|x64
-		{14928860-6CC4-4383-B52E-9F9BE6A2FF42}.Release|x64.Build.0 = Release|x64
-		{14928860-6CC4-4383-B52E-9F9BE6A2FF42}.Release|x86.ActiveCfg = Release|Win32
-		{14928860-6CC4-4383-B52E-9F9BE6A2FF42}.Release|x86.Build.0 = Release|Win32
 		{D5879344-4CDF-44F6-A57D-7BCD233C27CA}.Debug|x64.ActiveCfg = Debug|x64
 		{D5879344-4CDF-44F6-A57D-7BCD233C27CA}.Debug|x64.Build.0 = Debug|x64
 		{D5879344-4CDF-44F6-A57D-7BCD233C27CA}.Debug|x86.ActiveCfg = Debug|Win32
@@ -80,6 +67,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {055F7F20-2B7C-4C7A-8C49-A35FD6E386A0}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
