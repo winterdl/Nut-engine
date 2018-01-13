@@ -19,7 +19,7 @@
 #include "wrapper.h"
 #include <windows.h>
 
-const char *infotext = "name=\"Gomoku AI\", author=\"Chijun Sima\", version=\"0.3.8\", country=\"China\", www=\"https://github.com/NutshellySima/Nut-engine\"";
+const char *infotext = "name=\"Gomoku AI\", author=\"Chijun Sima\", version=\"2.0.0\", country=\"China\", www=\"https://github.com/NutshellySima/Nut-engine\"";
 
 Cwrapper AI;
 
@@ -27,7 +27,7 @@ Cwrapper AI;
 void brain_init()
 {
 	pipeOut("MESSAGE AI: Nutengine");
-	pipeOut("MESSAGE Copyright (c) 2017 Chijun Sima");
+	pipeOut("MESSAGE Copyright (c) 2017-2018 Chijun Sima");
 	pipeOut("MESSAGE Licensed under the Apache License 2.0.");
 	pipeOut("MESSAGE https://github.com/NutshellySima/Nut-engine");
 	if (width != 15 || height != 15)
