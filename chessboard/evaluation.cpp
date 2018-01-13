@@ -118,13 +118,13 @@ void evaluation::analyse_line(const std::array<uint8_t, 15> &line, int num, cons
 	int left_range = xl, right_range = xr;
 	while (left_range > 0)
 	{
-		if (line[left_range - 1] == inverse)
+		if (right_range - left_range >= 4 || line[left_range - 1] == inverse)
 			break;
 		--left_range;
 	}
 	while (right_range < num)
 	{
-		if (line[right_range + 1] == inverse)
+		if (right_range - left_range >= 4 || line[right_range + 1] == inverse)
 			break;
 		++right_range;
 	}
