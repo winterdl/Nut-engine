@@ -17,6 +17,93 @@ limitations under the License.
 #include "stdafx.h"
 #include "evaluation.h"
 
+
+void evaluation::pop_state(chessboard & board)
+{
+	const auto& tmp = state.back();
+	int row = tmp[0];
+	int col = tmp[1];
+	size_t curpos = 2;
+	for (int ii = 0; ii < 15; ++ii)
+	{
+		board.layer_3[0][row][ii] = tmp[curpos++];
+		board.layer_3[1][ii][col] = tmp[curpos++];
+	}
+	int x, y;
+	if (row < col)
+	{
+		y = col - row;
+		x = 0;
+	}
+	else
+	{
+		y = 0;
+		x = row - col;
+	}
+	for (; x < 15 && y < 15; ++x, ++y)
+	{
+		board.layer_3[2][x][y] = tmp[curpos++];
+	}
+	if (14 - row < col)
+	{
+		y = col - 14 + row;
+		x = 14;
+	}
+	else
+	{
+		y = 0;
+		x = row + col;
+	}
+	for (; x >= 0 && y < 15; --x, ++y)
+	{
+		board.layer_3[3][x][y] = tmp[curpos++];
+	}
+	state.pop_back();
+}
+
+void evaluation::save_state(chessboard & board, int row, int col)
+{
+	std::array<uint8_t, 62>tmp;
+	int curpos = 0;
+	tmp[curpos++] = row;
+	tmp[curpos++] = col;
+	for (int ii = 0; ii < 15; ++ii)
+	{
+		tmp[curpos++] = board.layer_3[0][row][ii];
+		tmp[curpos++] = board.layer_3[1][ii][col];
+	}
+	int x, y;
+	if (row < col)
+	{
+		y = col - row;
+		x = 0;
+	}
+	else
+	{
+		y = 0;
+		x = row - col;
+	}
+	for (; x < 15 && y < 15; ++x, ++y)
+	{
+		tmp[curpos++] = board.layer_3[2][x][y];
+	}
+	if (14 - row < col)
+	{
+		y = col - 14 + row;
+		x = 14;
+	}
+	else
+	{
+		y = 0;
+		x = row + col;
+	}
+	for (; x >= 0 && y < 15; --x, ++y)
+	{
+		tmp[curpos++] = board.layer_3[3][x][y];
+	}
+	state.emplace_back(tmp);
+}
+
 void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noexcept
 {
 	if (pure)
@@ -36,6 +123,7 @@ void evaluation::reset_point(chessboard &board, int row, int col, bool pure) noe
 		}
 		else
 		{
+			save_state(board, row, col);
 			for (int ii = 0; ii < 15; ++ii)
 			{
 				board.layer_3[0][row][ii] = 0;

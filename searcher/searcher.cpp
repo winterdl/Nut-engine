@@ -63,7 +63,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(const int8_
 			auto com = make_tuple(std::get<0>(temp), std::get<1>(x), std::get<2>(x));
 			ress.emplace_back(com);
 			board.undo(std::get<1>(x), std::get<2>(x));
-			evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
+			evaluator.pop_state(ref(board));
 		}
 		sort(ress.rbegin(), ress.rend(), [](const auto &i, const auto &ii) {return get<0>(i) < get<0>(ii); });
 		return ress;
@@ -126,7 +126,7 @@ std::vector<std::tuple<int, int8_t, int8_t>> searcher::smart_genmove(const int8_
 		else
 			ress.emplace_back(com);
 		board.undo(std::get<1>(x), std::get<2>(x));
-		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
+		evaluator.pop_state(ref(board));
 	}
 	if (checkneg2 || checkneg1 || check1 || check2 || check3 || check4)
 	{
@@ -247,8 +247,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int8_t turn, chessboard& boa
 		nturn = 2;
 	else
 		nturn = 1;
-	int res = evaluator.evaluate(ref(board), turn, i, ii, true);
-	res = evaluator.evaluate(ref(board), turn, i, ii, false);
+	int res = evaluator.evaluate(ref(board), turn, i, ii, false);
 	if (res == 100000)
 		return std::make_tuple(10000000 - ply, i, ii);
 	else if (res == -100000)
@@ -263,6 +262,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int8_t turn, chessboard& boa
 	for (auto&x : moves)
 	{
 		board.put(std::get<1>(x), std::get<2>(x), turn);
+		evaluator.evaluate(ref(board), nturn, std::get<1>(x), std::get<2>(x), true);
 		std::tuple<int, int8_t, int8_t> temp;
 		if (depth == this->search_depth)
 		{
@@ -277,7 +277,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value(int8_t turn, chessboard& boa
 		if (std::get<0>(v) < std::get<0>(com))
 			v = com;
 		board.undo(std::get<1>(x), std::get<2>(x));
-		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
+		evaluator.pop_state(ref(board));
 		if (std::get<0>(v) >= beta)
 			return v;
 		alpha = max(alpha, std::get<0>(v));
@@ -294,8 +294,7 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int8_t turn, chessboard& boa
 		nturn = 2;
 	else
 		nturn = 1;
-	int res = evaluator.evaluate(ref(board), turn, i, ii, true);
-	res = 0 - evaluator.evaluate(ref(board), turn, i, ii, false);
+	int res = 0 - evaluator.evaluate(ref(board), turn, i, ii, false);
 	if (res == -100000)
 		return std::make_tuple(0 - 10000000 + ply, i, ii);
 	else if (res == 100000)
@@ -309,12 +308,13 @@ std::tuple<int, int8_t, int8_t> searcher::min_value(int8_t turn, chessboard& boa
 	for (auto&x : moves)
 	{
 		board.put(std::get<1>(x), std::get<2>(x), turn);
+		evaluator.evaluate(ref(board), nturn, std::get<1>(x), std::get<2>(x), true);
 		auto temp = max_value(nturn, ref(board), alpha, beta, depth - 1, std::get<1>(x), std::get<2>(x), ply + 1, ref(evaluator));
 		auto com = make_tuple(std::get<0>(temp), std::get<1>(x), std::get<2>(x));
 		if (get<0>(v) > get<0>(com))
 			v = com;
 		board.undo(std::get<1>(x), std::get<2>(x));
-		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
+		evaluator.pop_state(ref(board));
 		if (std::get<0>(v) <= alpha)
 			return v;
 		beta = min(beta, std::get<0>(v));
@@ -333,8 +333,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value_first(int8_t turn, chessboar
 		nturn = 2;
 	else
 		nturn = 1;
-	int res = evaluator.evaluate(ref(board), turn, i, ii, true);
-	res = evaluator.evaluate(ref(board), turn, i, ii, false);
+	int res = evaluator.evaluate(ref(board), turn, i, ii, false);
 	if (res == 100000)
 		return std::make_tuple(10000000 - ply, i, ii);
 	else if (res == -100000)
@@ -350,6 +349,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value_first(int8_t turn, chessboar
 	for (auto&x : moves)
 	{
 		board.put(std::get<1>(x), std::get<2>(x), turn);
+		evaluator.evaluate(ref(board), nturn, std::get<1>(x), std::get<2>(x), true);
 		if (changed == false)
 		{
 			trueval = std::make_tuple(-0x7fffffff, std::get<1>(x), std::get<2>(x));
@@ -361,7 +361,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value_first(int8_t turn, chessboar
 		else
 			first = true;
 		board.undo(std::get<1>(x), std::get<2>(x));
-		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
+		evaluator.pop_state(ref(board));
 	}
 	for (auto&x : futures)
 		x.wait();
@@ -375,8 +375,7 @@ void searcher::min_value_first(int8_t turn, chessboard board, int beta, int8_t d
 		nturn = 2;
 	else
 		nturn = 1;
-	int res = evaluator.evaluate(ref(board), turn, i, ii, true);
-	res = 0 - evaluator.evaluate(ref(board), turn, i, ii, false);
+	int res = 0 - evaluator.evaluate(ref(board), turn, i, ii, false);
 	if (res == -100000)
 	{
 		write_val(std::make_tuple(0 - 10000000 + ply, i, ii));
@@ -397,13 +396,14 @@ void searcher::min_value_first(int8_t turn, chessboard board, int beta, int8_t d
 	for (auto&x : moves)
 	{
 		board.put(std::get<1>(x), std::get<2>(x), turn);
+		evaluator.evaluate(ref(board), nturn, std::get<1>(x), std::get<2>(x), true);
 		int alpha = getAlphaVal();
 		auto temp = max_value(nturn, ref(board), alpha, beta, depth - 1, std::get<1>(x), std::get<2>(x), ply + 1, ref(evaluator));
 		auto com = make_tuple(std::get<0>(temp), i, ii);
 		if (get<0>(v) > get<0>(com))
 			v = com;
 		board.undo(std::get<1>(x), std::get<2>(x));
-		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
+		evaluator.pop_state(ref(board));
 		if (std::get<0>(v) <= getAlphaVal())
 		{
 			return;
@@ -423,8 +423,7 @@ void searcher::min_value_second(int8_t turn, chessboard board, int beta, int8_t 
 		nturn = 2;
 	else
 		nturn = 1;
-	int res = evaluator.evaluate(ref(board), turn, i, ii, true);
-	res = 0 - evaluator.evaluate(ref(board), turn, i, ii, false);
+	int res = 0 - evaluator.evaluate(ref(board), turn, i, ii, false);
 	if (res == -100000)
 	{
 		write_val(std::make_tuple(0 - 10000000 + ply, i, ii));
@@ -447,10 +446,11 @@ void searcher::min_value_second(int8_t turn, chessboard board, int beta, int8_t 
 	for (auto&x : moves)
 	{
 		board.put(std::get<1>(x), std::get<2>(x), turn);
+		evaluator.evaluate(ref(board), nturn, std::get<1>(x), std::get<2>(x), true);
 		int alpha = getAlphaVal();
 		futures.emplace_back(std::async(std::launch::async, &searcher::max_value_second, this, nturn, board, alpha, ref(beta), depth - 1, std::get<1>(x), std::get<2>(x), ply + 1, evaluator));
 		board.undo(std::get<1>(x), std::get<2>(x));
-		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
+		evaluator.pop_state(ref(board));
 		if (chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - start).count() >= timeoutnum)
 			break;
 	}
@@ -486,8 +486,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value_second(int8_t turn, chessboa
 		nturn = 2;
 	else
 		nturn = 1;
-	int res = evaluator.evaluate(ref(board), turn, i, ii, true);
-	res = evaluator.evaluate(ref(board), turn, i, ii, false);
+	int res = evaluator.evaluate(ref(board), turn, i, ii, false);
 	if (res == 100000)
 	{
 		betachanger(std::make_tuple(10000000 - ply, i, ii));
@@ -509,6 +508,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value_second(int8_t turn, chessboa
 	for (auto&x : moves)
 	{
 		board.put(std::get<1>(x), std::get<2>(x), turn);
+		evaluator.evaluate(ref(board), nturn, std::get<1>(x), std::get<2>(x), true);
 		std::tuple<int, int8_t, int8_t> temp;
 		if (depth == this->search_depth)
 		{
@@ -523,7 +523,7 @@ std::tuple<int, int8_t, int8_t> searcher::max_value_second(int8_t turn, chessboa
 		if (std::get<0>(v) < std::get<0>(com))
 			v = com;
 		board.undo(std::get<1>(x), std::get<2>(x));
-		evaluator.evaluate(ref(board), turn, std::get<1>(x), std::get<2>(x), true);
+		evaluator.pop_state(ref(board));
 		if (std::get<0>(v) >= betageter())
 		{
 			return v;
