@@ -32,7 +32,7 @@ public:
 private:
 	void save_state(chessboard &board, int row, int col);
 	std::vector<std::array<uint8_t,62>>state;
-	void reset_point(chessboard &board, int row, int col, bool pure) noexcept;
+	void reset_point(chessboard &board, int row, int col) noexcept;
 	void analyse_line(const std::array<uint8_t, 15> &line, int num, const int pos) noexcept;
 	void analysis_horizon(chessboard &, int i, int j) noexcept;
 	void analysis_vertical(chessboard &, int i, int j) noexcept;
