@@ -504,7 +504,7 @@ void evaluation::analysis_right(chessboard &board, int i, int j) noexcept
 	}
 }
 
-int evaluation::__evaluate(chessboard &board, int turn, const int row, const int col, bool pure) noexcept
+int evaluation::evaluate(chessboard &board, int turn, const int row, const int col, bool pure) noexcept
 {
 	if (pure)
 	{
@@ -522,25 +522,21 @@ int evaluation::__evaluate(chessboard &board, int turn, const int row, const int
 	}
 	for (int i = 0; i < board.number; ++i)
 	{
-		auto temp = board.layer_5[i];
-		int ch1 = board.layer_3[0][temp.first][temp.second];
-		if (ch1 >= STWO && ch1 <= FIVE)
+		const auto temp = board.layer_5[i];
+		if (const uint8_t ch1 = board.layer_3[0][temp.first][temp.second]; ch1 >= STWO && ch1 <= FIVE)
 			++layer_4[board.board[temp.first][temp.second]][ch1];
-		int ch2 = board.layer_3[1][temp.first][temp.second];
-		if (ch2 >= STWO && ch2 <= FIVE)
+		if (const uint8_t ch2 = board.layer_3[1][temp.first][temp.second]; ch2 >= STWO && ch2 <= FIVE)
 			++layer_4[board.board[temp.first][temp.second]][ch2];
-		int ch3 = board.layer_3[2][temp.first][temp.second];
-		if (ch3 >= STWO && ch3 <= FIVE)
+		if (const uint8_t ch3 = board.layer_3[2][temp.first][temp.second]; ch3 >= STWO && ch3 <= FIVE)
 			++layer_4[board.board[temp.first][temp.second]][ch3];
-		int ch4 = board.layer_3[3][temp.first][temp.second];
-		if (ch4 >= STWO && ch4 <= FIVE)
+		if (const uint8_t ch4 = board.layer_3[3][temp.first][temp.second]; ch4 >= STWO && ch4 <= FIVE)
 			++layer_4[board.board[temp.first][temp.second]][ch4];
 	}
 	if (layer_4[WHITE][SFOUR] >= 2)
 		++layer_4[WHITE][FOUR];
 	if (layer_4[BLACK][SFOUR] >= 2)
 		++layer_4[BLACK][FOUR];
-	int score;
+	int score, wvalue = 0, bvalue = 0;
 	if (layer_4[BLACK][FIVE])
 	{
 		score = 9999 * checkturn(BLACK, turn);
@@ -551,7 +547,6 @@ int evaluation::__evaluate(chessboard &board, int turn, const int row, const int
 		score = 9999 * checkturn(WHITE, turn);
 		goto end;
 	}
-	int wvalue = 0, bvalue = 0;
 	if (turn == WHITE)
 	{
 		if (layer_4[WHITE][FOUR] > 0)
@@ -734,10 +729,4 @@ void evaluation::evaluate_point(chessboard &board, int row, int col) noexcept
 				analysis_right(board, x, y);
 		}
 	}
-}
-
-int evaluation::evaluate(chessboard &board, const int turn, const int row, const int col, bool pure) noexcept
-{
-	int score = __evaluate(board, turn, row, col, pure);
-	return score;
 }
