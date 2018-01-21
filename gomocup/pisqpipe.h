@@ -53,6 +53,6 @@ void brain_about(); /* call pipeOut(" your AI info ") */
 #endif
 
 					/* these functions are in pisqpipe.cpp */
-extern int pipeOut(char *fmt, ...);
+extern int pipeOut(const char *fmt, ...);
 extern void do_mymove(int x, int y);
 extern void suggest(int x, int y);
