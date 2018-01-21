@@ -5,7 +5,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,7 +44,7 @@ static HANDLE event1, event2;
 
 
 /** write a line to STDOUT */
-int pipeOut(char *fmt, ...)
+int pipeOut(const char *fmt, ...)
 {
 	int i;
 	va_list va;
@@ -65,7 +65,7 @@ static void get_line()
 	do {
 		c = getchar();
 		if (c == EOF) exit(0);
-		if (bytes<sizeof(cmd)) cmd[bytes++] = (char)c;
+		if (bytes < sizeof(cmd)) cmd[bytes++] = (char)c;
 	} while (c != '\n');
 	cmd[bytes - 1] = 0;
 	if (cmd[bytes - 2] == '\r') cmd[bytes - 2] = 0;
@@ -75,8 +75,8 @@ static void get_line()
 /** parse coordinates x,y */
 static int parse_coord(const char *param, int *x, int *y)
 {
-	if (sscanf(param, "%d,%d", x, y) != 2 ||
-		*x<0 || *y<0 || *x >= width || *y >= height) {
+	if (sscanf_s(param, "%d,%d", x, y) != 2 ||
+		*x < 0 || *y < 0 || *x >= width || *y >= height) {
 		return 0;
 	}
 	return 1;
@@ -85,7 +85,7 @@ static int parse_coord(const char *param, int *x, int *y)
 /** parse coordinates x,y and player number z */
 static void parse_3int_chk(const char *param, int *x, int *y, int *z)
 {
-	if (sscanf(param, "%d,%d,%d", x, y, z) != 3 || *x<0 || *y<0 ||
+	if (sscanf_s(param, "%d,%d,%d", x, y, z) != 3 || *x < 0 || *y < 0 ||
 		*x >= width || *y >= height) *z = 0;
 }
 
@@ -95,7 +95,7 @@ static const char *get_cmd_param(const char *command, const char *input)
 	int n1, n2;
 	n1 = (int)strlen(command);
 	n2 = (int)strlen(input);
-	if (n1>n2 || _strnicmp(command, input, n1)) return NULL; /* it is not command */
+	if (n1 > n2 || _strnicmp(command, input, n1)) return NULL; /* it is not command */
 	input += strlen(command);
 	while (isspace(input[0])) input++;
 	return input;
@@ -154,7 +154,7 @@ static void do_command()
 {
 	const char *param;
 	const char *info;
-	char *t;
+	const char *t;
 	int x, y, who, e;
 
 	if ((param = get_cmd_param("info", cmd)) != 0) {
@@ -164,14 +164,14 @@ static void do_command()
 		if ((info = get_cmd_param("time_left", param)) != 0) info_time_left = atoi(info);
 		if ((info = get_cmd_param("game_type", param)) != 0) info_game_type = atoi(info);
 		if ((info = get_cmd_param("rule", param)) != 0) { e = atoi(info); info_exact5 = e & 1; info_continuous = (e >> 1) & 1; info_renju = (e >> 2) & 1; }
-		if ((info = get_cmd_param("folder", param)) != 0) strncpy(dataFolder, info, sizeof(dataFolder) - 1);
+		if ((info = get_cmd_param("folder", param)) != 0) strncpy_s(dataFolder, 256, info, sizeof(dataFolder) - 1);
 #ifdef DEBUG_EVAL
 		if ((info = get_cmd_param("evaluate", param)) != 0) { if (parse_coord(info, &x, &y)) brain_eval(x, y); }
 #endif
 		/* unknown info is ignored */
 	}
 	else if ((param = get_cmd_param("start", cmd)) != 0) {
-		if (sscanf(param, "%d", &width) != 1 || width<5) {
+		if (sscanf_s(param, "%d", &width) != 1 || width < 5) {
 			width = 0;
 			pipeOut("ERROR bad START parameter");
 		}
@@ -182,7 +182,7 @@ static void do_command()
 		}
 	}
 	else if ((param = get_cmd_param("rectstart", cmd)) != 0) {
-		if (sscanf(param, "%d ,%d", &width, &height) != 2 || width<5 || height<5) {
+		if (sscanf_s(param, "%d ,%d", &width, &height) != 2 || width < 5 || height < 5) {
 			width = height = 0;
 			pipeOut("ERROR bad RECTSTART parameters");
 		}
